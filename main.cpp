@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     return app.exec();
 }
 
-
+//lol
 //undo : Ctrl+z
 //go foward : Ctrl+y
 //comment processing : Ctrl+/
