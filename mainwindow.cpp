@@ -58,6 +58,10 @@
 #include <QString>
 
 
+
+
+
+
 MainWindow::MainWindow(){
     QMenuBar *menuBar = new QMenuBar;
     QMenu *menuWindow = menuBar->addMenu(tr("&File"));  //keyboard shortcut "Alt+F"

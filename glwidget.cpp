@@ -106,15 +106,6 @@ static void qNormalizeAngle(int &angle)
         angle -= 360 * 16;
 }
 
-void GLWidget::setXRotationWithoutNormalization(int angle)
-{
-    if (angle != m_xRot) {
-        m_xRot = angle;
-        emit xRotationChanged(angle);
-        update();
-    }
-}
-
 void GLWidget::setXRotation(int angle)
 {
     qNormalizeAngle(angle);
@@ -153,12 +144,6 @@ void GLWidget::setScale(int s_value)
         emit scaleChanged(s_value);
         update();
     }
-}
-
-void GLWidget::setCameraLookAtTop()
-{
-    m_camera.lookAt(QVector3D(0, 1, 0), QVector3D(0, 0, 0), QVector3D(0, 0, 1));
-    update();
 }
 
 void GLWidget::cleanup()
@@ -206,7 +191,7 @@ void GLWidget::initializeGL()
     glClearColor(0, 0, 0, 0);
 
     std::ifstream read;
-    read.open("C:/Users/thaloo/Documents/GitHub/hcgfinal/bunny.off");
+    read.open("C:/Users/p/Desktop/Graphics/assignment/Assign-1/mesh-data/bunny.off");
     qDebug()<<"read ok";
     char tt[10];
     read.getline(tt,10);
@@ -272,10 +257,10 @@ void GLWidget::initializeGL()
 
 
     QOpenGLShader *vertS = new QOpenGLShader(QOpenGLShader::Vertex, this);
-    vertS->compileSourceFile("C:/Users/thaloo/Documents/GitHub/hcgfinal/basic.vert");
+    vertS->compileSourceFile("C:/Users/p/Desktop/Graphics/team_project/qt/basic.vert");
 
     QOpenGLShader *fragS = new QOpenGLShader(QOpenGLShader::Fragment, this);
-    fragS->compileSourceFile("C:/Users/thaloo/Documents/GitHub/hcgfinal/basic.frag");
+    fragS->compileSourceFile("C:/Users/p/Desktop/Graphics/team_project/qt/basic.frag");
 
     qDebug()<<"shader ok";
 
