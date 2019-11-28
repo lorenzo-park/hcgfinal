@@ -79,6 +79,8 @@ public:
     float* crossProduct(float x1,float y1, float z1, float x2,float y2, float z2);
     float* threePoint_crossProduct(float x1,float y1,float z1,float x2,float y2,float z2,float x3,float y3,float z3);
 
+    boolean isTranslationOn = true;
+
 public slots:
     void setXRotation(int angle);
     void setYRotation(int angle);
@@ -88,6 +90,8 @@ public slots:
 
     void moveX(int degree);
     void moveY(int degree);
+
+    void enableTranslation(boolean translationOnOff);
 
 signals:
     void xRotationChanged(int angle);

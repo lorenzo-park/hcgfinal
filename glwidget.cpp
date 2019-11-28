@@ -146,6 +146,11 @@ void GLWidget::setScale(int s_value)
     }
 }
 
+void GLWidget::enableTranslation(boolean translationOnOff)
+{
+    isTranslationOn = translationOnOff;
+}
+
 void GLWidget::cleanup()
 {
     if (m_program == nullptr)
@@ -358,17 +363,20 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    int dx = event->x() - m_lastPos.x();
-    int dy = event->y() - m_lastPos.y();
+    if (isTranslationOn) {
+        int dx = event->x() - m_lastPos.x();
+        int dy = event->y() - m_lastPos.y();
 
-    if (event->buttons() & Qt::LeftButton) {
-        moveX(1000*((float(dx)/this->width())+moveXdegree+0.5));
-        moveY(1000*((float(dy)/this->height())+moveYdegree+0.5));
-        //        setXRotation(m_xRot + 8 * dy);
-//        setYRotation(m_yRot + 8 * dx);
-    } else if (event->buttons() & Qt::RightButton) {
-        if(dy<0)setScale(m_scale*10+1);
-        else setScale(m_scale*10-1);
+        if (event->buttons() & Qt::LeftButton) {
+            moveX(1000*((float(dx)/this->width())+moveXdegree+0.5));
+            moveY(1000*((float(dy)/this->height())+moveYdegree+0.5));
+            //        setXRotation(m_xRot + 8 * dy);
+    //        setYRotation(m_yRot + 8 * dx);
+        } else if (event->buttons() & Qt::RightButton) {
+            if(dy<0)setScale(m_scale*10+1);
+            else setScale(m_scale*10-1);
+        }
+        m_lastPos = event->pos();
     }
-    m_lastPos = event->pos();
+
 }
