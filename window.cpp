@@ -63,7 +63,12 @@
 Window::Window(MainWindow *mw)
     : mainWindow(mw)
 {
-    glWidget = new GLWidget;
+    // For design screen
+    glWidget2D = new GLWidget;
+    glWidget2D->setScale(50);
+
+    // For viewer screen
+    glWidget3D = new GLWidget(this->glWidget2D);
 
     xSlider = createSlider();
     ySlider = createSlider();
@@ -78,29 +83,30 @@ Window::Window(MainWindow *mw)
     xMove->setValue(500);
     yMove->setValue(500);
 
-    connect(xMove,&QSlider::valueChanged,glWidget,&GLWidget::moveX);
-    connect(yMove,&QSlider::valueChanged,glWidget,&GLWidget::moveY);
+    connect(xMove,&QSlider::valueChanged,glWidget3D,&GLWidget::moveX);
+    connect(yMove,&QSlider::valueChanged,glWidget3D,&GLWidget::moveY);
 
-    connect(glWidget,&GLWidget::changedXmove,xMove,&QSlider::setValue);
-    connect(glWidget,&GLWidget::changedYmove,yMove,&QSlider::setValue);
+    connect(glWidget3D,&GLWidget::changedXmove,xMove,&QSlider::setValue);
+    connect(glWidget3D,&GLWidget::changedYmove,yMove,&QSlider::setValue);
 
     scale = new QSlider(Qt::Vertical);
     scale->setRange(1, 100); //1: 0.1  100: 10
 
-    connect(xSlider, &QSlider::valueChanged, glWidget, &GLWidget::setXRotation);
-    connect(glWidget, &GLWidget::xRotationChanged, xSlider, &QSlider::setValue);
-    connect(ySlider, &QSlider::valueChanged, glWidget, &GLWidget::setYRotation);
-    connect(glWidget, &GLWidget::yRotationChanged, ySlider, &QSlider::setValue);
-    connect(zSlider, &QSlider::valueChanged, glWidget, &GLWidget::setZRotation);
-    connect(glWidget, &GLWidget::zRotationChanged, zSlider, &QSlider::setValue);
-    connect(scale, &QSlider::valueChanged, glWidget, &GLWidget::setScale);
-    connect(glWidget, &GLWidget::scaleChanged, scale, &QSlider::setValue);
+    connect(xSlider, &QSlider::valueChanged, glWidget3D, &GLWidget::setXRotation);
+    connect(glWidget3D, &GLWidget::xRotationChanged, xSlider, &QSlider::setValue);
+    connect(ySlider, &QSlider::valueChanged, glWidget3D, &GLWidget::setYRotation);
+    connect(glWidget3D, &GLWidget::yRotationChanged, ySlider, &QSlider::setValue);
+    connect(zSlider, &QSlider::valueChanged, glWidget3D, &GLWidget::setZRotation);
+    connect(glWidget3D, &GLWidget::zRotationChanged, zSlider, &QSlider::setValue);
+    connect(scale, &QSlider::valueChanged, glWidget3D, &GLWidget::setScale);
+    connect(glWidget3D, &GLWidget::scaleChanged, scale, &QSlider::setValue);
 
     QHBoxLayout *TwoWindow = new QHBoxLayout;
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QHBoxLayout *container = new QHBoxLayout;
-    container->addWidget(glWidget);
+    container->addWidget(glWidget2D);
+    container->addWidget(glWidget3D);
     container->addWidget(xSlider);
     container->addWidget(ySlider);
     container->addWidget(zSlider);
