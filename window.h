@@ -77,7 +77,8 @@ private slots:
 private:
     QSlider *createSlider();
 
-    GLWidget *glWidget;
+    GLWidget *glWidget2D;
+    GLWidget *glWidget3D;
     QSlider *xSlider;
     QSlider *ySlider;
     QSlider *zSlider;
