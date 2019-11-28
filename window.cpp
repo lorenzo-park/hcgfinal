@@ -49,6 +49,7 @@
 ****************************************************************************/
 
 #include "glwidget.h"
+#include "glWidget3D.h"
 #include "window.h"
 #include "mainwindow.h"
 #include <QSlider>
@@ -64,7 +65,7 @@ Window::Window(MainWindow *mw)
     : mainWindow(mw)
 {
     glWidget = new GLWidget;
-    glWidget3D = new GLWidget;
+    glWidget3D = new GLWidget3D;
 
     xSlider = createSlider();
     ySlider = createSlider();
