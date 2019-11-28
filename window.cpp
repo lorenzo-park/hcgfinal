@@ -101,8 +101,6 @@ Window::Window(MainWindow *mw)
     connect(scale, &QSlider::valueChanged, glWidget3D, &GLWidget::setScale);
     connect(glWidget3D, &GLWidget::scaleChanged, scale, &QSlider::setValue);
 
-    QHBoxLayout *TwoWindow = new QHBoxLayout;
-
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QHBoxLayout *container = new QHBoxLayout;
     container->addWidget(glWidget2D);
@@ -119,10 +117,7 @@ Window::Window(MainWindow *mw)
     mainLayout->addWidget(xMove);
     mainLayout->addWidget(yMove);
 
-    TwoWindow->addWidget(mainLayout);
-    TwoWindow->addWidget(glWidget3D);
-
-    setLayout(TwoWindow);
+    setLayout(mainLayout);
 
     xSlider->setValue(15 * 16);
     ySlider->setValue(345 * 16);
