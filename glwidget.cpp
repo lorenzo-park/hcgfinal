@@ -106,15 +106,6 @@ static void qNormalizeAngle(int &angle)
         angle -= 360 * 16;
 }
 
-void GLWidget::setXRotationWithoutNormalization(int angle)
-{
-    if (angle != m_xRot) {
-        m_xRot = angle;
-        emit xRotationChanged(angle);
-        update();
-    }
-}
-
 void GLWidget::setXRotation(int angle)
 {
     qNormalizeAngle(angle);
@@ -153,12 +144,6 @@ void GLWidget::setScale(int s_value)
         emit scaleChanged(s_value);
         update();
     }
-}
-
-void GLWidget::setCameraLookAtTop()
-{
-    m_camera.lookAt(QVector3D(0, 1, 0), QVector3D(0, 0, 0), QVector3D(0, 0, 1));
-    update();
 }
 
 void GLWidget::cleanup()
