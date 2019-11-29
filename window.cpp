@@ -69,6 +69,9 @@ Window::Window(MainWindow *mw)
 
     // For viewer screen
     glWidget3D = new GLWidget(this->glWidget2D);
+    glWidget3D->enableViewerMode(true);
+
+    glWidget2D->setReferenceWidget(glWidget3D);
 
     xSlider = createSlider();
     ySlider = createSlider();
@@ -119,7 +122,7 @@ Window::Window(MainWindow *mw)
 
     setLayout(mainLayout);
 
-    xSlider->setValue(115 * 16);
+    xSlider->setValue(0 * 16);
     ySlider->setValue(0 * 16);
     zSlider->setValue(0 * 16);
     scale->setValue(2);

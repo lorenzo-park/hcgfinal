@@ -50,6 +50,7 @@
 
 #include "glwidget.h"
 #include "CircuitBase.h"
+#include "BasicMaterial.h"
 #include <QMouseEvent>
 #include <QOpenGLShaderProgram>
 #include <QCoreApplication>
@@ -74,6 +75,11 @@ GLWidget::~GLWidget()
     cleanup();
 }
 
+void GLWidget::setReferenceWidget(GLWidget* reference)
+{
+    this->reference = reference;
+}
+
 void GLWidget::moveX(int degree){
     if(float(degree)/1000-0.5!= moveXdegree){
         moveXdegree=(float(degree)/1000-0.5);
@@ -96,7 +102,7 @@ QSize GLWidget::minimumSizeHint() const
 
 QSize GLWidget::sizeHint() const
 {
-    return QSize(400, 400);
+    return QSize(600, 600);
 }
 
 static void qNormalizeAngle(int &angle)
@@ -152,6 +158,21 @@ void GLWidget::enableTranslation(boolean translationOnOff)
     isTranslationOn = translationOnOff;
 }
 
+void GLWidget::enableViewerMode(boolean mode)
+{
+    isViewerMode = mode;
+}
+
+void GLWidget::setReferenceWidgetData()
+{
+    if (!isViewerMode) {
+        reference->materials = materials;
+        reference->update();
+    } else {
+        return;
+    }
+}
+
 void GLWidget::cleanup()
 {
 
@@ -188,6 +209,14 @@ void GLWidget::paintGL()
     glMatrixMode(GL_MODELVIEW);
 
     glPushMatrix();
+
+    if (isViewerMode)
+    {
+        glRotatef(120.0f, 1, 0, 0);
+        glRotatef(180.0f, 0, 1, 0);
+        glRotatef(180.0f, 0, 0, 1);
+    }
+
     glRotatef(m_xRot / 16.0f, 1, 0, 0);
     glRotatef(m_yRot / 16.0f, 0, 1, 0);
     glRotatef(m_zRot / 16.0f, 0, 0, 1);
@@ -200,6 +229,10 @@ void GLWidget::paintGL()
     qDebug()<<"scale" << m_scale;
 
     circuitBase->draw();
+    for (auto material : materials) {
+        material->draw();
+        qDebug() << "Drew at" << material->x << material->y << material->depth;
+    }
     glPopMatrix();
 
 }
@@ -207,20 +240,42 @@ void GLWidget::paintGL()
 void GLWidget::resizeGL(int w, int h)
 {
     glViewport(0, 0, w, h);
+    qDebug() << w << h;
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    glFrustum(-1.5f, 1.5f, -1.5f, 1.5f, 3.0f, 30.0f);
+    if (isViewerMode)
+    {
+        glFrustum(-1.5f, 1.5f, -1.5f, 1.5f, 3.0f, 30.0f);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
 
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+        glTranslatef(0, 0, -10.0f);
+    } else {
+        glOrtho(-5.0f, 5.0f, -5.0f, 5.0f, -5.0f, 5.0f);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
 
-    glTranslatef(0, 0, -10.0f);
+        glTranslatef(0, 0, -5.0f);
+    }
+
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
     m_lastPos = event->pos();
+
+    if (!isViewerMode)
+    {
+        float x = 2.0f * (m_lastPos.x() / 600.0f) - 1.0f;
+        float y = 1.0f - 2.0f * (m_lastPos.y() / 600.0f);
+        qDebug() << "Added at" << x << y;
+        BasicMaterial* material = new BasicMaterial(x*80, y*80, 1.0f, 0.1f, 0.1f, 0.1f);
+        materials.push_back(material);
+        setReferenceWidgetData();
+        update();
+    }
+
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event)
