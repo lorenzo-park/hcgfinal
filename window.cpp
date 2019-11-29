@@ -65,7 +65,7 @@ Window::Window(MainWindow *mw)
 {
     // For design screen
     glWidget2D = new GLWidget;
-    glWidget2D->setScale(50);
+    glWidget2D->setScale(10);
 
     // For viewer screen
     glWidget3D = new GLWidget(this->glWidget2D);
@@ -119,10 +119,10 @@ Window::Window(MainWindow *mw)
 
     setLayout(mainLayout);
 
-    xSlider->setValue(15 * 16);
-    ySlider->setValue(345 * 16);
+    xSlider->setValue(115 * 16);
+    ySlider->setValue(0 * 16);
     zSlider->setValue(0 * 16);
-    scale->setValue(50);
+    scale->setValue(2);
 
 }
 

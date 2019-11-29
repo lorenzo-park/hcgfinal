@@ -49,6 +49,7 @@
 ****************************************************************************/
 
 #include "glwidget.h"
+#include "CircuitBase.h"
 #include <QMouseEvent>
 #include <QOpenGLShaderProgram>
 #include <QCoreApplication>
@@ -138,9 +139,9 @@ void GLWidget::setZRotation(int angle)
 
 void GLWidget::setScale(int s_value)
 {
-    float value=float(s_value)/10;
+    float value=float(s_value)/100;
     if(value != m_scale){
-        m_scale = value;
+        m_scale = (GLfloat) pow(2.3, value);
         emit scaleChanged(s_value);
         update();
     }
@@ -153,33 +154,8 @@ void GLWidget::enableTranslation(boolean translationOnOff)
 
 void GLWidget::cleanup()
 {
-    if (m_program == nullptr)
-        return;
-    makeCurrent();
-    m_logoVbo.destroy();
-    delete m_program;
-    m_program = 0;
-    doneCurrent();
+
 }
-
-float* GLWidget::crossProduct(float x1,float y1, float z1, float x2,float y2, float z2){
-    float* result = new float[3];
-    result[0] = (y1 * z2 - z1 *y2);
-    result[1] = (z1 * x2 - x1 *z2);
-    result[2] = (x1 * y2 - y1 *x2);
-    float normal = sqrt(result[0] * result[0] + result[1] * result[1] + result[2] * result[2]);
-    result[0]/=normal;
-    result[1]/=normal;
-    result[2]/=normal;
-    return result;
-}
-
-
-float* GLWidget::threePoint_crossProduct(float x1,float y1,float z1,float x2,float y2,float z2,float x3,float y3,float z3){
-    float* vector = crossProduct(x2-x1, y2-y1, z2-z1, x3-x1, y3-y1, z3-z1);
-    return vector;
-}
-
 
 void GLWidget::initializeGL()
 {
@@ -190,170 +166,56 @@ void GLWidget::initializeGL()
     // aboutToBeDestroyed() signal, instead of the destructor. The emission of
     // the signal will be followed by an invocation of initializeGL() where we
     // can recreate all resources.
+
     connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &GLWidget::cleanup);
 
     initializeOpenGLFunctions();
     glClearColor(0, 0, 0, 0);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glShadeModel(GL_FLAT);
 
-    std::ifstream read;
-    read.open("C:/Users/thaloo/Documents/GitHub/hcgfinal/bunny.off");
-    qDebug()<<"read ok";
-    char tt[10];
-    read.getline(tt,10);
-    qDebug()<<tt;
-    int zero, three;
-    read >> total_vertices >> total_faces >> zero;
-    float* vertex_coordinates = new float[total_vertices * 3];
-    unsigned int* vertex_indices = new unsigned int[total_faces * 3];
-    for(int i=0; i<total_vertices; i++){
-        read >> vertex_coordinates[i*3+0] >> vertex_coordinates[i*3+1] >> vertex_coordinates[i*3+2];
-    }
-    for(int i=0; i<total_faces; i++){
-        read >> three >> vertex_indices[i*3+0] >> vertex_indices[i*3+1] >> vertex_indices[i*3+2];
-    }
-    qDebug()<<tt;
-
-    float* face_normal = new float[total_faces * 3];
-    for(int i=0; i<total_faces; i++){
-        float* face_cross = threePoint_crossProduct(vertex_coordinates[vertex_indices[i*3+0]*3+0],vertex_coordinates[vertex_indices[i*3+0]*3+1],vertex_coordinates[vertex_indices[i*3+0]*3+2],
-                                                    vertex_coordinates[vertex_indices[i*3+1]*3+0],vertex_coordinates[vertex_indices[i*3+1]*3+1],vertex_coordinates[vertex_indices[i*3+1]*3+2],
-                                                    vertex_coordinates[vertex_indices[i*3+2]*3+0],vertex_coordinates[vertex_indices[i*3+2]*3+1],vertex_coordinates[vertex_indices[i*3+2]*3+2]);
-        face_normal[3*i+0] = face_cross[0];
-        face_normal[3*i+1] = face_cross[1];
-        face_normal[3*i+2] = face_cross[2];
-    }
-    float* vertex_normal = new float[total_vertices * 3];
-    for(int i=0; i<total_vertices*3 ;i++){
-        vertex_normal[i] = 0;
-    }
-    float* count = new float[total_vertices];
-    for(int i=0; i<total_vertices;i++){
-        count[i] = 0;
-    }
-    for(int i=0; i<total_faces; i++){
-        for(int j=0; j<3; j++){
-            vertex_normal[vertex_indices[i*3+j]*3+0]+=face_normal[i*3+0];
-            vertex_normal[vertex_indices[i*3+j]*3+1]+=face_normal[i*3+1];
-            vertex_normal[vertex_indices[i*3+j]*3+2]+=face_normal[i*3+2];
-            count[vertex_indices[i*3+j]]++;
-        }
-    }
-    for(int i=0;i<total_vertices;i++){
-        vertex_normal[i*3+0]/=count[i];
-        vertex_normal[i*3+1]/=count[i];
-        vertex_normal[i*3+2]/=count[i];
-    }
-    read.close();
-
-    qDebug()<<"ok for now";
-
-
-    float* vertexArray = new float[total_faces * 3 * 6];
-    for(int i=0; i<total_faces; i++){
-        for(int j=0;j<3;j++){
-            vertexArray[(6*(3*i+j)+0)]=vertex_coordinates[vertex_indices[i*3+j]*3+0];
-            vertexArray[(6*(3*i+j)+1)]=vertex_coordinates[vertex_indices[i*3+j]*3+1];
-            vertexArray[(6*(3*i+j)+2)]=vertex_coordinates[vertex_indices[i*3+j]*3+2];
-            vertexArray[(6*(3*i+j)+3)]=vertex_normal[vertex_indices[i*3+j]*3+0];
-            vertexArray[(6*(3*i+j)+4)]=vertex_normal[vertex_indices[i*3+j]*3+1];
-            vertexArray[(6*(3*i+j)+5)]=vertex_normal[vertex_indices[i*3+j]*3+2];
-        }
-    }
-
-
-    QOpenGLShader *vertS = new QOpenGLShader(QOpenGLShader::Vertex, this);
-    vertS->compileSourceFile("C:/Users/thaloo/Documents/GitHub/hcgfinal/basic.vert");
-
-    QOpenGLShader *fragS = new QOpenGLShader(QOpenGLShader::Fragment, this);
-    fragS->compileSourceFile("C:/Users/thaloo/Documents/GitHub/hcgfinal/basic.frag");
-
-    qDebug()<<"shader ok";
-
-
-    m_program = new QOpenGLShaderProgram;
-
-    m_program->addShader(vertS);
-    m_program->addShader(fragS);
-    m_program->bindAttributeLocation("vertex", 0);
-    m_program->bindAttributeLocation("normal", 1);
-    m_program->link();
-    m_program->bind();
-    m_projMatrixLoc = m_program->uniformLocation("matProj");
-    m_mvMatrixLoc = m_program->uniformLocation("matModel");
-//    m_normalMatrixLoc = m_program->uniformLocation("normal");
-    m_lightPosLoc = m_program->uniformLocation("lightPos");
-
-    // Create a vertex array object. In OpenGL ES 2.0 and OpenGL 2.x
-    // implementations this is optional and support may not be present
-    // at all. Nonetheless the below code works in all cases and makes
-    // sure there is a VAO when one is needed.
-    m_vao.create();
-    QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
-
-    // Setup our vertex buffer object.
-    m_logoVbo.create();
-    m_logoVbo.bind();
-    m_logoVbo.allocate(vertexArray, total_faces * 3 * 6 * sizeof(GLfloat));
-//    m_logoVbo.allocate(vertexArray, total_faces * 3 * sizeof(GLfloat));
-
-    // Store the vertex attribute bindings for the program.
-    setupVertexAttribs();
-
-    // Our camera never changes in this example.
-    m_camera.setToIdentity();
-    m_camera.translate(0, 0, -1);
-
-    // Light position is fixed.
-    m_program->setUniformValue(m_lightPosLoc, QVector3D(0, 0, 70));
-
-    m_program->release();
+    // Initialize base
+    circuitBase = new CircuitBase();
 
     qDebug()<<"init ok";
-
-}
-
-void GLWidget::setupVertexAttribs()
-{
-    m_logoVbo.bind();
-    QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
-    f->glEnableVertexAttribArray(0);
-    f->glEnableVertexAttribArray(1);
-    f->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), 0);
-    f->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), reinterpret_cast<void *>(3 * sizeof(GLfloat)));
-    m_logoVbo.release();
 }
 
 void GLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
 
-    m_world.setToIdentity();
-    m_world.rotate(180.0f - (m_xRot / 16.0f), 1, 0, 0);
-    m_world.rotate(m_yRot / 16.0f, 0, 1, 0);
-    m_world.rotate(m_zRot / 16.0f, 0, 0, 1);
+    glMatrixMode(GL_MODELVIEW);
 
-    m_world.scale(m_scale);
-    m_world.translate(moveXdegree,moveYdegree);
+    glPushMatrix();
+    glRotatef(m_xRot / 16.0f, 1, 0, 0);
+    glRotatef(m_yRot / 16.0f, 0, 1, 0);
+    glRotatef(m_zRot / 16.0f, 0, 0, 1);
 
-    QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
-    m_program->bind();
-    m_program->setUniformValue(m_projMatrixLoc, m_proj);
-    m_program->setUniformValue(m_mvMatrixLoc, m_camera * m_world);
-//    QMatrix3x3 normalMatrix = m_world.normalMatrix();
-//    m_program->setUniformValue(m_normalMatrixLoc, normalMatrix);
+    glScalef(m_scale, m_scale, m_scale);
 
-//       glDrawArrays(GL_TRIANGLES, 0, total_faces*3);
-   glDrawArrays(GL_TRIANGLES, 0, total_faces * 3 * 6);
-//    glDrawElements(GL_TRIANGLES, total_faces*3, GL_UNSIGNED_INT, 0);
-    m_program->release();
+
+    qDebug()<<"rot x" << m_xRot << "rot y" << m_yRot << "rot z" << m_zRot;
+
+    qDebug()<<"scale" << m_scale;
+
+    circuitBase->draw();
+    glPopMatrix();
+
 }
 
 void GLWidget::resizeGL(int w, int h)
 {
-    m_proj.setToIdentity();
-    m_proj.perspective(45.0f, GLfloat(w) / h, 0.01f, 100.0f);
+    glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    glFrustum(-1.5f, 1.5f, -1.5f, 1.5f, 3.0f, 30.0f);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    glTranslatef(0, 0, -10.0f);
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
@@ -380,3 +242,4 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     }
 
 }
+
