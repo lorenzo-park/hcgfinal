@@ -14,8 +14,8 @@ void BasicMaterial::draw()
 {
     // Draw base
     glPushMatrix();
+    glTranslatef(x, -y, depth);
     glScalef(cellSizeX, cellSizeY, cellSizeZ);
-    glTranslatef(x, y, depth);
     glColor3f(color[0], color[1], color[2]);
     for (int i = 0; i < 6; ++i) {
         glBegin(GL_POLYGON);

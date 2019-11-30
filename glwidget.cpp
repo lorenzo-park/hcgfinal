@@ -259,6 +259,20 @@ void GLWidget::initializeGL()
     glEnable(GL_DEPTH_TEST);
     glShadeModel(GL_FLAT);
 
+    glEnable(GL_LIGHTING);
+
+    GLfloat lightPos1[] = { 0, 2, -5, 1 };
+    GLfloat diffuse1[] = { 1, 1, 0, 1 };
+    GLfloat specular1[] = { 1, 1, 0, 1 };
+    GLfloat ambient1[] = { 1, 1, 1, 1 };
+
+
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse1);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specular1);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambient1);
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPos1);
+
     // Initialize base
     circuitBase = new CircuitBase();
 
@@ -338,10 +352,11 @@ void GLWidget::paintGL()
 
     circuitBase->draw();
 //    glPopMatrix();
+    glDisable(GL_LIGHTING);
     for (auto material : materials) {
         material->draw();
     }
-
+    glEnable(GL_LIGHTING);
     glPopMatrix();
 }
 
@@ -358,7 +373,7 @@ void GLWidget::resizeGL(int w, int h)
     pr_right = origin_center_value[0] + 5;
     pr_bottom = origin_center_value[1] - 5;
     pr_top = origin_center_value[1] + 5;
-    glOrtho(pr_left, pr_right, pr_bottom, pr_top, origin_center_value[2] + 30, origin_center_value[2] - 30);
+    glOrtho(pr_left, pr_right, pr_bottom, pr_top, origin_center_value[2] - 30, origin_center_value[2] + 30);
 
 
     glMatrixMode(GL_MODELVIEW);
@@ -385,10 +400,11 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
                 float x = global_coord[0];
                 float y = global_coord[1];
                 qDebug() << "Added at" << x << y;
-                BasicMaterial* material = new BasicMaterial(x, y, 5.0f, 0.1f, 0.1f, 0.1f);
+                BasicMaterial* material = new BasicMaterial(x, y, -0.3f, 0.1f, 0.1f, 0.1f);
                 materials.push_back(material);
                 setReferenceWidgetData();
                 update();
+
             }
         }
         //right_zooming
@@ -434,8 +450,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
             curPos[0] = global_coord[0];
             curPos[1] = global_coord[1];
             curPos[2] = global_coord[2];
-            if (sqrt((curPos[0]-center_value[0])* (curPos[0] - center_value[0])+(curPos[1] - center_value[1])* (curPos[1] - center_value[1])) > radius
-                || sqrt((lastPos[0] - center_value[0])* (lastPos[0] - center_value[0])+ (lastPos[1] - center_value[1])* (lastPos[1] - center_value[1]) > radius)) {
+            if (sqrt((curPos[0]-center_value[0])* (curPos[0] - center_value[0])+(curPos[1] - center_value[1])* (curPos[1] - center_value[1])) > radius*4
+                || sqrt((lastPos[0] - center_value[0])* (lastPos[0] - center_value[0])+ (lastPos[1] - center_value[1])* (lastPos[1] - center_value[1]) > radius*4)) {
                 return;
             }
 
