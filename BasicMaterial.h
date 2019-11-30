@@ -16,6 +16,8 @@ public:
     float y;
     float depth;
 
+    int layer;
+
 private:
     float cellSizeX = 0.1f;
     float cellSizeY = 0.1f;

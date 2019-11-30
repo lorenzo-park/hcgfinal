@@ -257,7 +257,6 @@ void GLWidget::initializeGL()
     initializeOpenGLFunctions();
     glClearColor(0, 0, 0, 0);
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
     glShadeModel(GL_FLAT);
 
     // Initialize base
@@ -271,7 +270,6 @@ void GLWidget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (check_mouse == 1) {
-        qDebug() << isViewerMode << "1";
             float curMM[16];
             glGetFloatv(GL_MODELVIEW_MATRIX, curMM);
             glMatrixMode(GL_MODELVIEW);
@@ -281,11 +279,9 @@ void GLWidget::paintGL()
             glTranslatef(-center_value[0], -center_value[1], -center_value[2]);
             angle = 0;
             glMultMatrixf(curMM);
-            qDebug() << isViewerMode << "111";
         }
         //right_zooming
         else if (check_mouse == 2) {
-        qDebug() << isViewerMode << "2";
                 float curMM[16];
                 glGetFloatv(GL_MODELVIEW_MATRIX, curMM);
                 glMatrixMode(GL_MODELVIEW);
@@ -300,7 +296,6 @@ void GLWidget::paintGL()
         }
         //middle_translation
         else if (check_mouse == 3) {
-        qDebug() << isViewerMode << "3";
             float curMM[16];
             glGetFloatv(GL_MODELVIEW_MATRIX, curMM);
             glMatrixMode(GL_MODELVIEW);
@@ -313,13 +308,11 @@ void GLWidget::paintGL()
             glMultMatrixf(curMM);
         }
 
-
-    qDebug() << isViewerMode << "4";
     glPushMatrix();
 
     if (isViewerMode)
     {
-        glRotatef(120.0f, 1, 0, 0);
+        glRotatef(-60.0f, 1, 0, 0);
     }
 
     glRotatef(180.0f, 0, 1, 0);
@@ -347,7 +340,6 @@ void GLWidget::paintGL()
 //    glPopMatrix();
     for (auto material : materials) {
         material->draw();
-        qDebug() << "Drew at" << material->x << material->y << material->depth;
     }
 
     glPopMatrix();
@@ -390,10 +382,10 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 
             if (!isViewerMode)
             {
-                float x = 2.0f * (m_lastPos.x() / 600.0f) - 1.0f;
-                float y = 2.0f * (m_lastPos.y() / 600.0f) - 1.0f;
+                float x = global_coord[0];
+                float y = global_coord[1];
                 qDebug() << "Added at" << x << y;
-                BasicMaterial* material = new BasicMaterial(x*80, y*80, 1.0f, 0.1f, 0.1f, 0.1f);
+                BasicMaterial* material = new BasicMaterial(x, y, 5.0f, 0.1f, 0.1f, 0.1f);
                 materials.push_back(material);
                 setReferenceWidgetData();
                 update();
