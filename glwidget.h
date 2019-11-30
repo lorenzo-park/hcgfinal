@@ -78,7 +78,29 @@ public:
     float moveXdegree=0;
     float moveYdegree=0;
 
+    float v_wide=0;
+    float v_height=0;
+    float viewport_x1, viewport_y1, viewport_x2, viewport_y2;
+    float pr_left, pr_right, pr_top, pr_bottom;
+    float origin_center_value[3]={0,0,0};
+    float curPos[3]={0,0,0};
+    float lastPos[3]={0,0,0};
+    int check_mouse = 0;
+    float center_value[3] = {0,0,0};
+    float radius;
+    float *axis_vec;
+    float angle;
+    float lastDistance, curDistance, cur_last_distance;
+    float scale_value;
+    float transl_x, transl_y, transl_z;
+    float global_scale =1;
+
 public slots:
+    float* findZ(float x, float y);
+    float* threePoint_crossProduct(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3);
+    float* crossProduct(float x1, float y1, float z1, float x2, float y2, float z2);
+    float find_angle(float x1, float y1, float z1, float x2, float y2, float z2);
+
     void setXRotation(int angle);
     void setYRotation(int angle);
     void setZRotation(int angle);
@@ -105,6 +127,7 @@ protected:
     void resizeGL(int width, int height) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
 //    void keyPressEvent(QKeyEvent *event) override;
 //    void keyReleaseEvent(QKeyEvent *event) override;
 

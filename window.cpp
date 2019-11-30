@@ -66,63 +66,90 @@ Window::Window(MainWindow *mw)
     // For design screen
     glWidget2D = new GLWidget;
     glWidget2D->setScale(10);
+    glWidget2D->enableTranslation(false);
 
     // For viewer screen
     glWidget3D = new GLWidget(this->glWidget2D);
 
-    xSlider = createSlider();
-    ySlider = createSlider();
-    zSlider = createSlider();
+    glWidget3D->setXRotation(115*16);
+    glWidget3D->setScale(2);
+    glWidget3D->enableTranslation(true);
 
+    selectBtn = new QPushButton;
+    selectBtn->setStyleSheet("QPushButton { background-color: rgb(0,0,255,50) } QPushButton:hover { background-color: rgb(0,0,255,30) } QPushButton:pressed{ background-color: rgb(0,0,255,70); }");
+    selectBtn->setIcon(QIcon("selectingBtnIcon2.png"));
+    selectBtn->setIconSize(QSize(50,50));
+    selectBtn->setFixedSize(QSize(60,60));
+    connect(selectBtn, &QPushButton::clicked, this, &Window::select);
 
-    xMove=new QSlider(Qt::Horizontal);
-    yMove=new QSlider(Qt::Horizontal);
+    subBlockColorBtn = new QPushButton;
+    subBlockColorBtn->setStyleSheet("QPushButton { background-color: rgb(0,0,255,50) } QPushButton:hover { background-color: rgb(0,0,255,30) } QPushButton:pressed{ background-color: rgb(0,0,255,70); }");
+    subBlockColorBtn->setIcon(QIcon("subblockcolorBtnicon.png"));
+    subBlockColorBtn->setIconSize(QSize(80,80));
+    subBlockColorBtn->setFixedSize(QSize(60,60));
+    connect(subBlockColorBtn, &QPushButton::clicked, this, &Window::subBlockColor);
 
-    xMove->setRange(0,1000); //-width/2 +width/2
-    yMove->setRange(0,1000); //-width/2 +width/2
-    xMove->setValue(500);
-    yMove->setValue(500);
+    addBlockBtn = new QPushButton;
+    addBlockBtn->setStyleSheet("QPushButton { background-color:  rgb(0,0,255,50) } QPushButton:hover { background-color: rgb(0,0,255,30) } QPushButton:pressed{ background-color: rgb(0,0,255,70); }");
+    addBlockBtn->setIcon(QIcon("addblockBtnicon.png"));
+    addBlockBtn->setIconSize(QSize(100,100));
+    addBlockBtn->setFixedSize(QSize(60,60));
+    connect(addBlockBtn, &QPushButton::clicked, this, &Window::addBlock);
 
-    connect(xMove,&QSlider::valueChanged,glWidget3D,&GLWidget::moveX);
-    connect(yMove,&QSlider::valueChanged,glWidget3D,&GLWidget::moveY);
+    deleteBlockBtn = new QPushButton;
+    deleteBlockBtn->setStyleSheet("QPushButton { background-color:  rgb(0,0,255,50) } QPushButton:hover { background-color: rgb(0,0,255,30) } QPushButton:pressed{ background-color: rgb(0,0,255,70); }");
+    deleteBlockBtn->setIcon(QIcon("deleteblockBtnicon.png"));
+    deleteBlockBtn->setIconSize(QSize(80,80));
+    deleteBlockBtn->setFixedSize(QSize(60,60));
+    connect(deleteBlockBtn, &QPushButton::clicked, this, &Window::deleteBlock);
 
-    connect(glWidget3D,&GLWidget::changedXmove,xMove,&QSlider::setValue);
-    connect(glWidget3D,&GLWidget::changedYmove,yMove,&QSlider::setValue);
+    addLayerBtn =  new QPushButton;
+    addLayerBtn->setStyleSheet("QPushButton { background-color:  rgb(0,0,255,50) } QPushButton:hover { background-color: rgb(0,0,255,30) } QPushButton:pressed{ background-color: rgb(0,0,255,70); }");
+    addLayerBtn->setIcon(QIcon("addlayerBtnicon.png"));
+    addLayerBtn->setIconSize(QSize(50,50));
+    addLayerBtn->setFixedSize(QSize(60,60));
+    connect(addLayerBtn, &QPushButton::clicked, this, &Window::addLayer);
 
-    scale = new QSlider(Qt::Vertical);
-    scale->setRange(1, 100); //1: 0.1  100: 10
+    layerToggleBtn = new QPushButton;
+    layerToggleBtn->setStyleSheet("QPushButton { background-color:  rgb(0,0,255,50) } QPushButton:hover { background-color: rgb(0,0,255,30) } QPushButton:pressed{ background-color: rgb(0,0,255,70); }");
+    layerToggleBtn->setIcon(QIcon("layertoggleBtnicon.png"));
+    layerToggleBtn->setIconSize(QSize(50,50));
+    layerToggleBtn->setFixedSize(QSize(60,60));
+    connect(layerToggleBtn, &QPushButton::clicked, this, &Window::layerToggle);
 
-    connect(xSlider, &QSlider::valueChanged, glWidget3D, &GLWidget::setXRotation);
-    connect(glWidget3D, &GLWidget::xRotationChanged, xSlider, &QSlider::setValue);
-    connect(ySlider, &QSlider::valueChanged, glWidget3D, &GLWidget::setYRotation);
-    connect(glWidget3D, &GLWidget::yRotationChanged, ySlider, &QSlider::setValue);
-    connect(zSlider, &QSlider::valueChanged, glWidget3D, &GLWidget::setZRotation);
-    connect(glWidget3D, &GLWidget::zRotationChanged, zSlider, &QSlider::setValue);
-    connect(scale, &QSlider::valueChanged, glWidget3D, &GLWidget::setScale);
-    connect(glWidget3D, &GLWidget::scaleChanged, scale, &QSlider::setValue);
+    addSubblockBtn = new QPushButton;
+    addSubblockBtn->setStyleSheet("QPushButton { background-color:  rgb(0,0,255,50) } QPushButton:hover { background-color: rgb(0,0,255,30) } QPushButton:pressed{ background-color: rgb(0,0,255,70); }");
+    addSubblockBtn->setIcon(QIcon("addsubblockBtn.png"));
+    addSubblockBtn->setIconSize(QSize(50,50));
+    addSubblockBtn->setFixedSize(QSize(60,60));
+    connect(addSubblockBtn, &QPushButton::clicked, this, &Window::addSubblock);
 
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    QHBoxLayout *container = new QHBoxLayout;
-    container->addWidget(glWidget2D);
-    container->addWidget(glWidget3D);
-    container->addWidget(xSlider);
-    container->addWidget(ySlider);
-    container->addWidget(zSlider);
-    container->addWidget(scale);
+    QHBoxLayout *mainLayout = new QHBoxLayout;
+    QVBoxLayout *buttonLayout = new QVBoxLayout;
+    QHBoxLayout *glLayout = new QHBoxLayout;
 
-    dockBtn = new QPushButton(tr("Undock"), this);
-    connect(dockBtn, &QPushButton::clicked, this, &Window::dockUndock);
-    mainLayout->addLayout(container);
-    mainLayout->addWidget(dockBtn);
-    mainLayout->addWidget(xMove);
-    mainLayout->addWidget(yMove);
+    buttonLayout->addWidget(selectBtn);
+    buttonLayout->addWidget(subBlockColorBtn);
+    buttonLayout->addWidget(addBlockBtn);
+    buttonLayout->addWidget(deleteBlockBtn);
+    buttonLayout->addWidget(addLayerBtn);
+    buttonLayout->addWidget(layerToggleBtn);
+    buttonLayout->addWidget(addSubblockBtn);
 
+    glLayout->addWidget(glWidget2D);
+    glLayout->addWidget(glWidget3D);
+
+    mainLayout->addLayout(buttonLayout);
+    mainLayout->addLayout(glLayout);
     setLayout(mainLayout);
 
-    xSlider->setValue(115 * 16);
-    ySlider->setValue(0 * 16);
-    zSlider->setValue(0 * 16);
-    scale->setValue(2);
+
+    QPalette pal = this->palette();
+    // set white background
+    pal.setColor(QPalette::Background, QColor(255,255,255));
+    this->setAutoFillBackground(true);
+    this->setPalette(pal);
+
 
 }
 
@@ -145,26 +172,31 @@ void Window::keyPressEvent(QKeyEvent *e)
         QWidget::keyPressEvent(e);
 }
 
-void Window::dockUndock()
-{
-    if (parent()) {
-        setParent(0);
-        setAttribute(Qt::WA_DeleteOnClose);
-        move(QApplication::desktop()->width() / 2 - width() / 2,
-             QApplication::desktop()->height() / 2 - height() / 2);
-        dockBtn->setText(tr("Dock"));
-        show();
-    } else {
-        if (!mainWindow->centralWidget()) {
-            if (mainWindow->isVisible()) {
-                setAttribute(Qt::WA_DeleteOnClose, false);
-                dockBtn->setText(tr("Undock"));
-                mainWindow->setCentralWidget(this);
-            } else {
-                QMessageBox::information(0, tr("Cannot dock"), tr("Main window already closed"));
-            }
-        } else {
-            QMessageBox::information(0, tr("Cannot dock"), tr("Main window already occupied"));
-        }
-    }
+
+void Window::select(){
+
+}
+
+void Window::subBlockColor(){
+
+}
+
+void Window::addBlock(){
+
+}
+
+void Window::deleteBlock(){
+
+}
+
+void Window::addLayer(){
+
+}
+
+void Window::layerToggle(){
+
+}
+
+void Window::addSubblock(){
+
 }

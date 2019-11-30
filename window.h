@@ -72,22 +72,31 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
-    void dockUndock();
-
+    void select();
+    void subBlockColor();
+    void addBlock();
+    void deleteBlock();
+    void addLayer();
+    void layerToggle();
+    void addSubblock();
 private:
     QSlider *createSlider();
 
     GLWidget *glWidget2D;
     GLWidget *glWidget3D;
-    QSlider *xSlider;
-    QSlider *ySlider;
-    QSlider *zSlider;
-    QSlider *scale;
-    QPushButton *dockBtn;
     MainWindow *mainWindow;
 
-    QSlider *xMove;
-    QSlider *yMove;
+
+    QPushButton *selectBtn;
+    QPushButton *subBlockColorBtn;
+    QPushButton *addBlockBtn;
+    QPushButton *deleteBlockBtn;
+    QPushButton *addLayerBtn;
+    QPushButton *layerToggleBtn;
+    QPushButton *addSubblockBtn;
+
+
+
 };
 
 #endif
