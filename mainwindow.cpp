@@ -56,9 +56,10 @@
 #include <QtWidgets>
 #include <fstream>
 #include <QString>
-
+#include "glwidget.h"
 
 MainWindow::MainWindow(){
+
     QMenuBar *menuBar = new QMenuBar;
     QMenu *menuWindow = menuBar->addMenu(tr("&File"));  //keyboard shortcut "Alt+F"
     setMenuBar(menuBar);
@@ -82,6 +83,9 @@ MainWindow::MainWindow(){
     menuWindow->addAction(OpenFile);
     connect(OpenFile, &QAction::triggered, this, &MainWindow::onOpenFile);
    // onOpenFile();
+
+    QString Filename; // this filename
+
 }
 
 void MainWindow::onAddNew(){
@@ -98,9 +102,12 @@ void MainWindow::onNewFile(){
         setCentralWidget(display);
     }
 
+    this->Filename = "test12321.txt";
 }
 
 void MainWindow::onSaveFile(){
+
+    GLWidget::SaveFile( this->Filename );
 
 }
 

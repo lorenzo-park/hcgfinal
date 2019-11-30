@@ -62,6 +62,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow();
     Window *display;
+    QString Filename;
 
 private slots:
     void onAddNew();

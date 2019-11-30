@@ -509,3 +509,13 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
+void GLWidget::SaveFile(QString Filename) {
+
+
+    // materials -> file txt
+
+
+
+
+    return;
+}
