@@ -117,6 +117,10 @@ void MainWindow::onOpenFile(){
         msg.exec();
         return;
     }
+
+    /* TODO */
+
+
     std::ifstream f(dir.toStdString());
 
 }
