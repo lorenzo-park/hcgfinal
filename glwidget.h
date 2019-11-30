@@ -97,6 +97,7 @@ public:
     float transl_x, transl_y, transl_z;
     float global_scale =1;
 
+
 public slots:
     float* findZ(float x, float y);
     float* threePoint_crossProduct(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3);
@@ -127,6 +128,7 @@ signals:
     void changedXmove(int degree);
     void changedYmove(int degree);
 
+
 protected:
     void initializeGL() override;
     void paintGL() override;
@@ -136,7 +138,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
 //    void keyPressEvent(QKeyEvent *event) override;
 //    void keyReleaseEvent(QKeyEvent *event) override;
-    void SaveFile(QString Filename);
+
 
 private:
     void setupVertexAttribs();
@@ -178,5 +180,9 @@ private:
     CircuitBase* circuitBase;
     std::list<BasicMaterial*> materials;
 };
+
+void SaveFile(QString Filename);
+void OpenFile(QString Filename);
+
 
 #endif

@@ -107,7 +107,7 @@ void MainWindow::onNewFile(){
 
 void MainWindow::onSaveFile(){
 
-    GLWidget::SaveFile( this->Filename );
+    SaveFile( this->Filename );
 
 }
 

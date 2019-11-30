@@ -76,6 +76,8 @@ GLWidget::GLWidget(QWidget *parent)
     axis_vec[1] = 0;
     axis_vec[2] = 0;
     angle = 0;
+
+
 }
 
 GLWidget::~GLWidget()
@@ -509,13 +511,20 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
-void GLWidget::SaveFile(QString Filename) {
+
+void SaveFile(QString Filename) {
 
 
     // materials -> file txt
 
+    qDebug() << "Saving file" << Filename;
+
+}
+
+void OpenFile(QString Filename) {
 
 
+    // file txt -> materials + draw
 
     return;
 }
