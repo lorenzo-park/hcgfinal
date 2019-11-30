@@ -70,6 +70,9 @@ Window::Window(MainWindow *mw)
 
     // For viewer screen
     glWidget3D = new GLWidget(this->glWidget2D);
+    glWidget3D->enableViewerMode(true);
+
+    glWidget2D->setReferenceWidget(glWidget3D);
 
     glWidget3D->setXRotation(115*16);
     glWidget3D->setScale(2);
@@ -142,7 +145,6 @@ Window::Window(MainWindow *mw)
     mainLayout->addLayout(buttonLayout);
     mainLayout->addLayout(glLayout);
     setLayout(mainLayout);
-
 
     QPalette pal = this->palette();
     // set white background

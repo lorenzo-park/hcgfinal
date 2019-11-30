@@ -50,6 +50,7 @@
 
 #include "glwidget.h"
 #include "CircuitBase.h"
+#include "BasicMaterial.h"
 #include <QMouseEvent>
 #include <QOpenGLShaderProgram>
 #include <QCoreApplication>
@@ -69,6 +70,12 @@ GLWidget::GLWidget(QWidget *parent)
     m_program=0;
 
     check_mouse = 0;
+
+    axis_vec = new float[3];
+    axis_vec[0] = 0;
+    axis_vec[1] = 0;
+    axis_vec[2] = 0;
+    angle = 0;
 }
 
 GLWidget::~GLWidget()
@@ -131,10 +138,10 @@ float* GLWidget::threePoint_crossProduct(float x1, float y1, float z1, float x2,
     return vector;
 }
 
-
-
-
-
+void GLWidget::setReferenceWidget(GLWidget* reference)
+{
+    this->reference = reference;
+}
 
 void GLWidget::moveX(int degree){
     if(float(degree)/1000-0.5!= moveXdegree){
@@ -158,7 +165,7 @@ QSize GLWidget::minimumSizeHint() const
 
 QSize GLWidget::sizeHint() const
 {
-    return QSize(400, 400);
+    return QSize(600, 600);
 }
 
 static void qNormalizeAngle(int &angle)
@@ -214,6 +221,22 @@ void GLWidget::enableTranslation(boolean translationOnOff)
     isTranslationOn = translationOnOff;
 }
 
+void GLWidget::enableViewerMode(boolean mode)
+{
+    isViewerMode = mode;
+}
+
+void GLWidget::setReferenceWidgetData()
+{
+    if (!isViewerMode) {
+        reference->materials = materials;
+        reference->update();
+        qDebug() << "why";
+    } else {
+        return;
+    }
+}
+
 void GLWidget::cleanup()
 {
 
@@ -248,6 +271,7 @@ void GLWidget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (check_mouse == 1) {
+        qDebug() << isViewerMode << "1";
             float curMM[16];
             glGetFloatv(GL_MODELVIEW_MATRIX, curMM);
             glMatrixMode(GL_MODELVIEW);
@@ -257,9 +281,11 @@ void GLWidget::paintGL()
             glTranslatef(-center_value[0], -center_value[1], -center_value[2]);
             angle = 0;
             glMultMatrixf(curMM);
+            qDebug() << isViewerMode << "111";
         }
         //right_zooming
         else if (check_mouse == 2) {
+        qDebug() << isViewerMode << "2";
                 float curMM[16];
                 glGetFloatv(GL_MODELVIEW_MATRIX, curMM);
                 glMatrixMode(GL_MODELVIEW);
@@ -274,6 +300,7 @@ void GLWidget::paintGL()
         }
         //middle_translation
         else if (check_mouse == 3) {
+        qDebug() << isViewerMode << "3";
             float curMM[16];
             glGetFloatv(GL_MODELVIEW_MATRIX, curMM);
             glMatrixMode(GL_MODELVIEW);
@@ -287,6 +314,16 @@ void GLWidget::paintGL()
         }
 
 
+    qDebug() << isViewerMode << "4";
+    glPushMatrix();
+
+    if (isViewerMode)
+    {
+        glRotatef(120.0f, 1, 0, 0);
+    }
+
+    glRotatef(180.0f, 0, 1, 0);
+    glRotatef(180.0f, 0, 0, 1);
 
 
 //    glMatrixMode(GL_MODELVIEW);
@@ -308,7 +345,12 @@ void GLWidget::paintGL()
 
     circuitBase->draw();
 //    glPopMatrix();
+    for (auto material : materials) {
+        material->draw();
+        qDebug() << "Drew at" << material->x << material->y << material->depth;
+    }
 
+    glPopMatrix();
 }
 
 void GLWidget::resizeGL(int w, int h)
@@ -316,6 +358,7 @@ void GLWidget::resizeGL(int w, int h)
     v_wide = w;
     v_height = h;
     glViewport(0, 0, w, h);
+    qDebug() << w << h;
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
@@ -328,12 +371,13 @@ void GLWidget::resizeGL(int w, int h)
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+
+
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
     m_lastPos = event->pos();
-
 
     float* global_coord = findZ(event->x(),event->y());
         //left_rotation
@@ -343,6 +387,17 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
             lastPos[0] = global_coord[0];
             lastPos[1] = global_coord[1];
             lastPos[2] = global_coord[2];
+
+            if (!isViewerMode)
+            {
+                float x = 2.0f * (m_lastPos.x() / 600.0f) - 1.0f;
+                float y = 2.0f * (m_lastPos.y() / 600.0f) - 1.0f;
+                qDebug() << "Added at" << x << y;
+                BasicMaterial* material = new BasicMaterial(x*80, y*80, 1.0f, 0.1f, 0.1f, 0.1f);
+                materials.push_back(material);
+                setReferenceWidgetData();
+                update();
+            }
         }
         //right_zooming
         else if (event->buttons() == Qt::RightButton) {
@@ -359,6 +414,8 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
             lastPos[1] = global_coord[1];
             lastPos[2] = global_coord[2];
         }
+
+
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *event){

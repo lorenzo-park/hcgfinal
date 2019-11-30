@@ -56,8 +56,10 @@
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
 #include <QMatrix4x4>
+#include <list>
 #include "logo.h"
 #include "CircuitBase.h"
+#include "BasicMaterial.h"
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 
@@ -111,6 +113,10 @@ public slots:
     void moveY(int degree);
 
     void enableTranslation(boolean translationOnOff);
+    void enableViewerMode(boolean mode);
+
+    void setReferenceWidget(GLWidget* reference);
+    void setReferenceWidgetData();
 
 signals:
     void xRotationChanged(int angle);
@@ -139,6 +145,7 @@ private:
     int m_yRot;
     int m_zRot;
     float m_scale;
+    GLWidget* reference;
     QPoint m_lastPos;
     QOpenGLVertexArrayObject m_vao;
     QOpenGLBuffer m_logoVbo;
@@ -156,6 +163,7 @@ private:
     int total_faces;
 
     boolean isTranslationOn = true;
+    boolean isViewerMode = false;
 
     GLfloat coords[6][4][3] = {
         { { +1.0, -1.0, +1.0 }, { +1.0, -1.0, -1.0 }, { +1.0, +1.0, -1.0 }, { +1.0, +1.0, +1.0 } },
@@ -167,6 +175,7 @@ private:
     };
 
     CircuitBase* circuitBase;
+    std::list<BasicMaterial*> materials;
 };
 
 #endif

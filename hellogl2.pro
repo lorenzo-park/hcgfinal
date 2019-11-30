@@ -1,8 +1,10 @@
 HEADERS       = glwidget.h \
+                BasicMaterial.h \
                 CircuitBase.h \
                 window.h \
                 mainwindow.h
 SOURCES       = glwidget.cpp \
+                BasicMaterial.cpp \
                 CircuitBase.cpp \
                 main.cpp \
                 window.cpp \

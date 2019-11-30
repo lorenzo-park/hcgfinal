@@ -9,6 +9,7 @@ CircuitBase::CircuitBase()
 
 void CircuitBase::draw()
 {
+    glColor3f(1, 1, 1);
     // Draw base
     glPushMatrix();
     glScalef(1.0f, 1.0f, 0.1f);
