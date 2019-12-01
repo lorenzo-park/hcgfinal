@@ -77,7 +77,7 @@ MainWindow::MainWindow(){
     saveFile->setText(tr("Save File"));
     menuWindow->addAction(saveFile);
     connect(saveFile, &QAction::triggered, this, &MainWindow::onSaveFile);
-    onSaveFile();
+    //onSaveFile();
     QAction *OpenFile = new QAction(menuWindow);
     OpenFile->setText(tr("Open File"));
     menuWindow->addAction(OpenFile);
@@ -101,28 +101,29 @@ void MainWindow::onNewFile(){
         display=new Window(this);
         setCentralWidget(display);
     }
-
-
-    qDebug("New Project handle");
-
-    QString filters("Text file (*.txt)");
-    QString dir = QFileDialog::getSaveFileName(this, "New Project File", QDir::currentPath(),filters);
-
-    if(dir == ""){
-        QMessageBox msg;
-        msg.setText("Failed to create new file");
-        msg.exec();
-        return;
-    }
-
-    this->Filename = dir;
-
     // reset materials
+    this->Filename = "";
     display->ResetMaterial();
 }
 
 void MainWindow::onSaveFile(){
     // save file
+
+    if (this->Filename != "") {
+
+    } else {
+        QString filters("Text file (*.txt)");
+        QString dir = QFileDialog::getSaveFileName(this, "Save File", QDir::currentPath(),filters);
+
+        if(dir == ""){
+            QMessageBox msg;
+            msg.setText("Failed to save file");
+            msg.exec();
+            return;
+        }
+        this->Filename = dir;
+    }
+
     display->SaveFile(this->Filename);
 }
 
