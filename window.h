@@ -67,9 +67,10 @@ class Window : public QWidget
 
 public:
     Window(MainWindow *mw);
-
+    void SaveFile(QString Filename);
 protected:
     void keyPressEvent(QKeyEvent *event) override;
+
 
 private slots:
     void select();
@@ -79,6 +80,8 @@ private slots:
     void addLayer();
     void layerToggle();
     void addSubblock();
+
+
 private:
     QSlider *createSlider();
 

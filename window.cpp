@@ -78,6 +78,7 @@ Window::Window(MainWindow *mw)
     glWidget3D->setScale(2);
     glWidget3D->enableTranslation(true);
 
+
     selectBtn = new QPushButton;
     selectBtn->setStyleSheet("QPushButton { background-color: rgb(0,0,255,50) } QPushButton:hover { background-color: rgb(0,0,255,30) } QPushButton:pressed{ background-color: rgb(0,0,255,70); }");
     selectBtn->setIcon(QIcon("selectingBtnIcon2.png"));
@@ -174,7 +175,11 @@ void Window::keyPressEvent(QKeyEvent *e)
         QWidget::keyPressEvent(e);
 }
 
+void Window::SaveFile(QString Filename) {
 
+    glWidget2D->SaveFile( Filename );
+
+}
 void Window::select(){
 
 }

@@ -57,6 +57,9 @@
 #include <math.h>
 #include <fstream>
 #include <QMatrix4x4>
+#include <iterator>
+#include <list>
+#include <algorithm>
 
 bool GLWidget::m_transparent = false;
 
@@ -511,20 +514,14 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
+void GLWidget::SaveFile(QString Filename) {
 
-void SaveFile(QString Filename) {
+    qDebug() << "SaveFile:" << Filename;
+    // Open file
+    std::ofstream file( Filename.toStdString() ) ;
+    for( const auto& material : materials )
+        file << (*material).x << " " << (*material).y << " " << (*material).depth << '\n';
 
-
-    // materials -> file txt
-
-    qDebug() << "Saving file" << Filename;
-
-}
-
-void OpenFile(QString Filename) {
-
-
-    // file txt -> materials + draw
-
-    return;
+    // Close file
+    file.close();
 }

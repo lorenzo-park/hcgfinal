@@ -102,13 +102,25 @@ void MainWindow::onNewFile(){
         setCentralWidget(display);
     }
 
-    this->Filename = "test12321.txt";
+
+    qDebug("New Project handle");
+
+    QString filters("Text file (*.txt)");
+    QString dir = QFileDialog::getSaveFileName(this, "New Project File", QDir::currentPath(),filters);
+
+    if(dir == ""){
+        QMessageBox msg;
+        msg.setText("Failed to create new file");
+        msg.exec();
+        return;
+    }
+
+    this->Filename = dir;
 }
 
 void MainWindow::onSaveFile(){
-
-    SaveFile( this->Filename );
-
+    // save file
+    display->SaveFile(this->Filename);
 }
 
 void MainWindow::onOpenFile(){
@@ -126,20 +138,7 @@ void MainWindow::onOpenFile(){
     }
 
     /* TODO */
-
-
     std::ifstream f(dir.toStdString());
 
+
 }
-
-
-
-
-
-
-
-
-
-
-
-

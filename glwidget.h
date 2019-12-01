@@ -77,6 +77,8 @@ public:
     QSize minimumSizeHint() const override;
     QSize sizeHint() const override;
 
+    void SaveFile(QString Filename);
+
     float moveXdegree=0;
     float moveYdegree=0;
 
