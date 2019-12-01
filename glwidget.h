@@ -78,6 +78,7 @@ public:
     QSize sizeHint() const override;
 
     void SaveFile(QString Filename);
+    void LoadFile(QString Filename);
 
     float moveXdegree=0;
     float moveYdegree=0;
@@ -182,9 +183,6 @@ private:
     CircuitBase* circuitBase;
     std::list<BasicMaterial*> materials;
 };
-
-void SaveFile(QString Filename);
-void OpenFile(QString Filename);
 
 
 #endif

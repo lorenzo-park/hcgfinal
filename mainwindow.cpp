@@ -137,8 +137,6 @@ void MainWindow::onOpenFile(){
         return;
     }
 
-    /* TODO */
-    std::ifstream f(dir.toStdString());
-
-
+    display->LoadFile( dir );
+    this->Filename = dir;
 }

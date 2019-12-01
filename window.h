@@ -68,6 +68,7 @@ class Window : public QWidget
 public:
     Window(MainWindow *mw);
     void SaveFile(QString Filename);
+    void LoadFile(QString Filename);
 protected:
     void keyPressEvent(QKeyEvent *event) override;
 

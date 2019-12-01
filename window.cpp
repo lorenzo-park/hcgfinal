@@ -180,6 +180,14 @@ void Window::SaveFile(QString Filename) {
     glWidget2D->SaveFile( Filename );
 
 }
+
+void Window::LoadFile(QString Filename) {
+
+    glWidget2D->LoadFile( Filename );
+}
+
+
+
 void Window::select(){
 
 }

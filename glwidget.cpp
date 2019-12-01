@@ -60,6 +60,9 @@
 #include <iterator>
 #include <list>
 #include <algorithm>
+#include <iostream>
+#include <vector>
+#include <sstream>
 
 bool GLWidget::m_transparent = false;
 
@@ -524,4 +527,55 @@ void GLWidget::SaveFile(QString Filename) {
 
     // Close file
     file.close();
+}
+
+float str2float (const std::string &str) {
+  std::stringstream ss(str);
+  float num;
+  if((ss >> num).fail())
+  {
+      /* 에러 */
+  }
+  return num;
+}
+
+std::vector<int> split(std::string str, char delimiter) {
+    std::vector<int> internal;
+    std::stringstream ss(str);
+    std::string temp;
+
+    while (getline(ss, temp, delimiter)) {
+        internal.push_back( str2float(temp) );
+    }
+
+    return internal;
+}
+
+void GLWidget::LoadFile(QString Filename) {
+    std::ifstream openFile(Filename.toStdString() );
+
+    if (openFile.is_open()) {
+        std::string line;
+        float x, y, z;
+
+        while (!materials.empty())
+           materials.pop_back();
+        setReferenceWidgetData();
+        update();
+
+        while (getline(openFile, line)) {
+            std::vector<int> line_vector = split(line, ' ');
+
+            x = line_vector[0];
+            y = line_vector[1];
+            z = line_vector[2];
+
+            BasicMaterial* material = new BasicMaterial(x, y, -0.3f, 0.1f, 0.1f, 0.1f);
+            materials.push_back(material);
+            setReferenceWidgetData();
+            update();
+        }
+    }
+
+
 }
