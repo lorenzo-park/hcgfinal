@@ -183,7 +183,11 @@ void Window::SaveFile(QString Filename) {
 
 void Window::LoadFile(QString Filename) {
 
+    ResetMaterial();
+
     glWidget2D->LoadFile( Filename );
+    glWidget3D->LoadFile( Filename );
+
 }
 
 
@@ -213,5 +217,10 @@ void Window::layerToggle(){
 }
 
 void Window::addSubblock(){
+
+}
+void Window::ResetMaterial() {
+    glWidget2D->Reset();
+    glWidget3D->Reset();
 
 }

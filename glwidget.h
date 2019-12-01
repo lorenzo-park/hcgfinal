@@ -79,6 +79,7 @@ public:
 
     void SaveFile(QString Filename);
     void LoadFile(QString Filename);
+    void Reset();
 
     float moveXdegree=0;
     float moveYdegree=0;

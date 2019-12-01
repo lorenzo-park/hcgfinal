@@ -116,6 +116,9 @@ void MainWindow::onNewFile(){
     }
 
     this->Filename = dir;
+
+    // reset materials
+    display->ResetMaterial();
 }
 
 void MainWindow::onSaveFile(){

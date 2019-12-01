@@ -529,6 +529,15 @@ void GLWidget::SaveFile(QString Filename) {
     file.close();
 }
 
+void GLWidget::Reset() {
+
+    while (!materials.empty())
+       materials.pop_back();
+    setReferenceWidgetData();
+    update();
+
+}
+
 float str2float (const std::string &str) {
   std::stringstream ss(str);
   float num;
@@ -539,8 +548,8 @@ float str2float (const std::string &str) {
   return num;
 }
 
-std::vector<int> split(std::string str, char delimiter) {
-    std::vector<int> internal;
+std::vector<float> split(std::string str, char delimiter) {
+    std::vector<float> internal;
     std::stringstream ss(str);
     std::string temp;
 
@@ -558,13 +567,8 @@ void GLWidget::LoadFile(QString Filename) {
         std::string line;
         float x, y, z;
 
-        while (!materials.empty())
-           materials.pop_back();
-        setReferenceWidgetData();
-        update();
-
         while (getline(openFile, line)) {
-            std::vector<int> line_vector = split(line, ' ');
+            std::vector<float> line_vector = split(line, ' ');
 
             x = line_vector[0];
             y = line_vector[1];

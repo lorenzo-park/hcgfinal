@@ -69,6 +69,7 @@ public:
     Window(MainWindow *mw);
     void SaveFile(QString Filename);
     void LoadFile(QString Filename);
+    void ResetMaterial();
 protected:
     void keyPressEvent(QKeyEvent *event) override;
 
