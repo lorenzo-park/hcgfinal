@@ -201,11 +201,17 @@ void Window::subBlockColor(){
 }
 
 void Window::addBlock(){
-
+    if (glWidget2D->getEditMode() == ADD_MODE)
+        glWidget2D->setEditMode(DEFAULT_MODE);
+    else
+        glWidget2D->setEditMode(ADD_MODE);
 }
 
 void Window::deleteBlock(){
-
+    if (glWidget2D->getEditMode() == DELETE_MODE)
+        glWidget2D->setEditMode(DEFAULT_MODE);
+    else
+        glWidget2D->setEditMode(DELETE_MODE);
 }
 
 void Window::addLayer(){

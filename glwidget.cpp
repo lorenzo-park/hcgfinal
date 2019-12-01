@@ -63,6 +63,7 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <list>
 
 bool GLWidget::m_transparent = false;
 
@@ -245,6 +246,16 @@ void GLWidget::setReferenceWidgetData()
     }
 }
 
+void GLWidget::setEditMode(EditMode editmode)
+{
+    this->activeMode = editmode;
+}
+
+EditMode GLWidget::getEditMode()
+{
+    return this->activeMode;
+}
+
 void GLWidget::cleanup()
 {
 
@@ -405,14 +416,50 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 
             if (!isViewerMode)
             {
-                float x = global_coord[0];
-                float y = global_coord[1];
-                qDebug() << "Added at" << x << y;
-                BasicMaterial* material = new BasicMaterial(x, y, -0.3f, 0.1f, 0.1f, 0.1f);
-                materials.push_back(material);
-                setReferenceWidgetData();
-                update();
 
+                switch(activeMode) {
+                case DEFAULT_MODE: {
+
+                    break;
+                }
+                case ADD_MODE:{
+
+                    float x = global_coord[0];
+                    float y = global_coord[1];
+                    qDebug() << "Added at" << x << y;
+                    BasicMaterial* material = new BasicMaterial(x, y, -0.3f, 0.1f, 0.1f, 0.1f);
+                    materials.push_back(material);
+                    setReferenceWidgetData();
+                    update();
+
+                    break;
+                }
+                case DELETE_MODE: {
+                    qDebug() << "delete mode check";
+                    float x = global_coord[0];
+                    float y = global_coord[1];
+
+                    std::list<BasicMaterial*> updatedMaterials;
+                    for (auto material : materials) {
+                        qDebug() << x << " in " << material->x - material->getSizeX() / 2 << " " << material->x + material->getSizeX() / 2;
+
+                        qDebug() << y << " in " << material->y - material->getSizeY() / 2 << " " << material->y + material->getSizeY() / 2;
+
+                        if (material->x - material->getSizeX() / 2 <= x && x <= material->x + material->getSizeX() / 2 &&
+                                material->y - material->getSizeY() / 2 <= y && y <= material->y + material->getSizeY() / 2) {
+
+
+                            continue;
+                        }
+                        updatedMaterials.push_back(material);
+                    }
+                    materials.clear();
+                    materials = updatedMaterials;
+                    setReferenceWidgetData();
+                    update();
+                    break;
+                }
+                }
             }
         }
         //right_zooming

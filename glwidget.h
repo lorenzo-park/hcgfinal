@@ -63,6 +63,12 @@
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 
+enum EditMode {
+    DEFAULT_MODE,
+    ADD_MODE,
+    DELETE_MODE
+};
+
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
@@ -122,6 +128,9 @@ public slots:
 
     void setReferenceWidget(GLWidget* reference);
     void setReferenceWidgetData();
+
+    EditMode getEditMode();
+    void setEditMode(EditMode editmode);
 
 signals:
     void xRotationChanged(int angle);
@@ -183,6 +192,8 @@ private:
 
     CircuitBase* circuitBase;
     std::list<BasicMaterial*> materials;
+
+    EditMode activeMode = DEFAULT_MODE;
 };
 
 

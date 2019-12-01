@@ -31,3 +31,18 @@ void BasicMaterial::setScale(float x)
 {
     scale = x;
 }
+
+float BasicMaterial::getSizeX()
+{
+    return this->cellSizeX * scale;
+}
+
+float BasicMaterial::getSizeY()
+{
+    return this->cellSizeY * scale;
+}
+
+float BasicMaterial::getSizeZ()
+{
+    return this->cellSizeZ * scale;
+}

@@ -18,10 +18,11 @@ public:
 
     int layer;
 
+    float getSizeX();
+    float getSizeY();
+    float getSizeZ();
+
 private:
-    float cellSizeX = 0.1f;
-    float cellSizeY = 0.1f;
-    float cellSizeZ = 0.01f;
 
     float color[3] = {1, 0, 0};
 
@@ -40,6 +41,11 @@ private:
             { { -1.0f * scale, +1.0f * scale, +1.0f * scale }, { +1.0f * scale, +1.0f * scale, +1.0f * scale },
             { +1.0f * scale, +1.0f * scale, -1.0f * scale }, { -1.0f * scale, +1.0f * scale, -1.0f * scale } }
         };
+
+
+    float cellSizeX = 0.1f;
+    float cellSizeY = 0.1f;
+    float cellSizeZ = 0.01f;
 };
 
 #endif // BASICMATERIAL_H
