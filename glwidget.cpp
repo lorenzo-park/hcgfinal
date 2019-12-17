@@ -426,8 +426,13 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 
                     float x = global_coord[0];
                     float y = global_coord[1];
-                    qDebug() << "Added at" << x << y;
-                    BasicMaterial* material = new BasicMaterial(x, y, -0.3f, 0.1f, 0.1f, 0.1f);
+
+                    float posX = round(2*x) / 2.0f;
+                    float posY = round(2*y) / 2.0f;
+
+                    qDebug() << "Added at" << x << y << posX << posY << event->x() << event->y();
+
+                    BasicMaterial* material = new BasicMaterial(posX, posY, 0.0f, 1.0f);
                     materials.push_back(material);
                     setReferenceWidgetData();
                     update();
@@ -621,7 +626,8 @@ void GLWidget::LoadFile(QString Filename) {
             y = line_vector[1];
             z = line_vector[2];
 
-            BasicMaterial* material = new BasicMaterial(x, y, -0.3f, 0.1f, 0.1f, 0.1f);
+            // Need to be modified!
+            BasicMaterial* material = new BasicMaterial(x, y, -0.3f, 0.1f);
             materials.push_back(material);
             setReferenceWidgetData();
             update();

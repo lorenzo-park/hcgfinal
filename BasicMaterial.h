@@ -7,7 +7,7 @@ class BasicMaterial
 {
 public:
     BasicMaterial();
-    BasicMaterial(float x, float y, float depth, float cellSizeX, float cellSizeY, float cellSizeZ);
+    BasicMaterial(float x, float y, float depth, float height);
 
     void draw();
 
