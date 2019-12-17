@@ -1,13 +1,19 @@
-#include "BasicMaterial.h"
+#include "cursor.h"
 
-BasicMaterial::BasicMaterial(float x, float y, float depth)
+Cursor::Cursor()
+{
+
+}
+
+
+Cursor::Cursor(float x, float y, float depth)
 {
     this->x = x;
     this->y = y;
     this->depth = -depth;
 }
 
-void BasicMaterial::draw()
+void Cursor::draw()
 {
     // Draw base
     glPushMatrix();
@@ -15,6 +21,7 @@ void BasicMaterial::draw()
     glTranslatef(0, 0, depth * 2 * scale - 2 * scale);
 
     glColor3f(color[0], color[1], color[2]);
+
 
     for (int i = 0; i < 6; ++i) {
         glBegin(GL_POLYGON);
@@ -26,22 +33,22 @@ void BasicMaterial::draw()
     glPopMatrix();
 }
 
-void BasicMaterial::setScale(float x)
+void Cursor::setScale(float x)
 {
     scale = x;
 }
 
-float BasicMaterial::getSizeX()
+float Cursor::getSizeX()
 {
     return this->cellSizeX;
 }
 
-float BasicMaterial::getSizeY()
+float Cursor::getSizeY()
 {
     return this->cellSizeY;
 }
 
-float BasicMaterial::getSizeZ()
+float Cursor::getSizeZ()
 {
     return this->cellSizeZ;
 }

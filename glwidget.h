@@ -60,6 +60,7 @@
 #include "logo.h"
 #include "CircuitBase.h"
 #include "BasicMaterial.h"
+#include "Cursor.h"
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 
@@ -193,6 +194,7 @@ private:
 
     CircuitBase* circuitBase;
     std::list<BasicMaterial*> materials;
+    Cursor* cursor = 0;
 
     EditMode activeMode = DEFAULT_MODE;
 };

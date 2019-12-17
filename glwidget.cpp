@@ -51,6 +51,7 @@
 #include "glwidget.h"
 #include "CircuitBase.h"
 #include "BasicMaterial.h"
+#include "cursor.h"
 #include <QMouseEvent>
 #include <QOpenGLShaderProgram>
 #include <QCoreApplication>
@@ -84,7 +85,7 @@ GLWidget::GLWidget(QWidget *parent)
     axis_vec[2] = 0;
     angle = 0;
 
-
+    this->setMouseTracking(true);
 }
 
 GLWidget::~GLWidget()
@@ -250,8 +251,8 @@ void GLWidget::setReferenceWidgetData()
 {
     if (!isViewerMode) {
         reference->materials = materials;
+        reference->cursor = cursor;
         reference->update();
-        qDebug() << "why";
     } else {
         return;
     }
@@ -386,6 +387,11 @@ void GLWidget::paintGL()
     for (auto material : materials) {
         material->draw();
     }
+
+    if (cursor != 0) {
+        cursor -> draw();
+    }
+
     glEnable(GL_LIGHTING);
     glPopMatrix();
 }
@@ -522,69 +528,100 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event){
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    if (isTranslationOn) {
+    float* global_coord = findZ(event->x(),event->y());
+    float x = global_coord[0];
+    float y = global_coord[1];
 
-        float* global_coord = findZ(event->x(), event->y());
+    float posX = round(2*x) / 2.0f;
+    float posY = round(2*y) / 2.0f;
 
-            curPos[0] = global_coord[0];
-            curPos[1] = global_coord[1];
-            curPos[2] = global_coord[2];
-            if (sqrt((curPos[0]-center_value[0])* (curPos[0] - center_value[0])+(curPos[1] - center_value[1])* (curPos[1] - center_value[1])) > radius*4
-                || sqrt((lastPos[0] - center_value[0])* (lastPos[0] - center_value[0])+ (lastPos[1] - center_value[1])* (lastPos[1] - center_value[1]) > radius*4)) {
-                return;
-            }
+    float depth = findDepth(posX, posY);
+    switch(activeMode) {
+    case ADD_MODE:{
+        cursor = new Cursor(posX, posY, depth);
+        setReferenceWidgetData();
+        update();
+        break;
+    }
+    case DELETE_MODE:{
+        cursor = new Cursor(posX, posY, depth);
+        setReferenceWidgetData();
+        update();
+        break;
+    }
+    default:{
+        cursor = 0;
+        setReferenceWidgetData();
+        update();
+        break;
+    }
+    }
 
-            if (curPos[0] == lastPos[0] && curPos[1] == lastPos[1] && curPos[2] == lastPos[2]) {
-                return;
-            }
+    if( event->buttons() ) {
+        if (isTranslationOn) {
 
-            //left point _ rotation
-            if (check_mouse == 1) {
-                float sphere_center[3] = { center_value[0], center_value[1], center_value[2] };
-                axis_vec = threePoint_crossProduct(sphere_center[0], sphere_center[1], sphere_center[2],
-                                                     lastPos[0], lastPos[1], lastPos[2],
-                                                     curPos[0], curPos[1], curPos[2]);
-                angle = find_angle(lastPos[0] - sphere_center[0], lastPos[1] - sphere_center[1], lastPos[2] - sphere_center[2],
-                                   curPos[0] - sphere_center[0], curPos[1] - sphere_center[1], curPos[2] - sphere_center[2]);
+            float* global_coord = findZ(event->x(), event->y());
 
-            }
-            //right point _ zooming
-            else if (check_mouse == 2) {
-                    lastDistance = sqrt((lastPos[0] - center_value[0]) * (lastPos[0] - center_value[0])
-                                      + (lastPos[1] - center_value[1]) * (lastPos[1] - center_value[1]));
-                    curDistance = sqrt((curPos[0] - center_value[0]) * (curPos[0] - center_value[0])
-                                      + (curPos[1] - center_value[1]) * (curPos[1] - center_value[1]));
-                    cur_last_distance = sqrt((curPos[0] - lastPos[0]) * (curPos[0] - lastPos[0])
-                                      + (curPos[1] - lastPos[1]) * (curPos[1] - lastPos[1]));
-                    scale_value = cur_last_distance / lastDistance;
-                    if (curDistance > lastDistance) {
-                        scale_value = 1 + scale_value;
-                    }
-                    else if (lastDistance > curDistance) {
-                        scale_value = 1 - scale_value;
-                    }
-                    else scale_value = 1;
+                curPos[0] = global_coord[0];
+                curPos[1] = global_coord[1];
+                curPos[2] = global_coord[2];
+                if (sqrt((curPos[0]-center_value[0])* (curPos[0] - center_value[0])+(curPos[1] - center_value[1])* (curPos[1] - center_value[1])) > radius*4
+                    || sqrt((lastPos[0] - center_value[0])* (lastPos[0] - center_value[0])+ (lastPos[1] - center_value[1])* (lastPos[1] - center_value[1]) > radius*4)) {
+                    return;
+                }
 
-                    if (scale_value < 0) {
-                        scale_value = 1;
-                    }
-            }
-            //middle point _ translation
-            else if (check_mouse == 3) {
-                transl_x = curPos[0] - lastPos[0];
-                transl_y = curPos[1] - lastPos[1];
+                if (curPos[0] == lastPos[0] && curPos[1] == lastPos[1] && curPos[2] == lastPos[2]) {
+                    return;
+                }
 
-                center_value[0] += transl_x;
-                center_value[1] += transl_y;
+                //left point _ rotation
+                if (check_mouse == 1) {
+                    float sphere_center[3] = { center_value[0], center_value[1], center_value[2] };
+                    axis_vec = threePoint_crossProduct(sphere_center[0], sphere_center[1], sphere_center[2],
+                                                         lastPos[0], lastPos[1], lastPos[2],
+                                                         curPos[0], curPos[1], curPos[2]);
+                    angle = find_angle(lastPos[0] - sphere_center[0], lastPos[1] - sphere_center[1], lastPos[2] - sphere_center[2],
+                                       curPos[0] - sphere_center[0], curPos[1] - sphere_center[1], curPos[2] - sphere_center[2]);
 
-            }
+                }
+                //right point _ zooming
+                else if (check_mouse == 2) {
+                        lastDistance = sqrt((lastPos[0] - center_value[0]) * (lastPos[0] - center_value[0])
+                                          + (lastPos[1] - center_value[1]) * (lastPos[1] - center_value[1]));
+                        curDistance = sqrt((curPos[0] - center_value[0]) * (curPos[0] - center_value[0])
+                                          + (curPos[1] - center_value[1]) * (curPos[1] - center_value[1]));
+                        cur_last_distance = sqrt((curPos[0] - lastPos[0]) * (curPos[0] - lastPos[0])
+                                          + (curPos[1] - lastPos[1]) * (curPos[1] - lastPos[1]));
+                        scale_value = cur_last_distance / lastDistance;
+                        if (curDistance > lastDistance) {
+                            scale_value = 1 + scale_value;
+                        }
+                        else if (lastDistance > curDistance) {
+                            scale_value = 1 - scale_value;
+                        }
+                        else scale_value = 1;
+
+                        if (scale_value < 0) {
+                            scale_value = 1;
+                        }
+                }
+                //middle point _ translation
+                else if (check_mouse == 3) {
+                    transl_x = curPos[0] - lastPos[0];
+                    transl_y = curPos[1] - lastPos[1];
+
+                    center_value[0] += transl_x;
+                    center_value[1] += transl_y;
+
+                }
 
 
-            lastPos[0] = curPos[0];
-            lastPos[1] = curPos[1];
-            lastPos[2] = curPos[2];
+                lastPos[0] = curPos[0];
+                lastPos[1] = curPos[1];
+                lastPos[2] = curPos[2];
 
-    update();
+        update();
+        }
     }
 }
 
