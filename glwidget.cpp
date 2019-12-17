@@ -128,6 +128,17 @@ float* GLWidget::findZ(float x, float y) {
     return global_coord;
 }
 
+float GLWidget::findDepth(float x, float y) {
+    float depth = 0;
+    for (auto material : materials) {
+        if (material->x == x && material->y == y) {
+            depth += material->getSizeZ();
+        }
+    }
+
+    return depth;
+}
+
 float* GLWidget::crossProduct(float x1, float y1, float z1, float x2, float y2, float z2) {
     float* out;
     out = new float[3];
@@ -430,9 +441,11 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
                     float posX = round(2*x) / 2.0f;
                     float posY = round(2*y) / 2.0f;
 
-                    qDebug() << "Added at" << x << y << posX << posY << event->x() << event->y();
 
-                    BasicMaterial* material = new BasicMaterial(posX, posY, 0.0f, 1.0f);
+                    float depth = findDepth(posX, posY);
+                    qDebug() << "Added at" << x << y << posX << posY << depth;
+
+                    BasicMaterial* material = new BasicMaterial(posX, posY, depth);
                     materials.push_back(material);
                     setReferenceWidgetData();
                     update();
@@ -444,16 +457,22 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
                     float x = global_coord[0];
                     float y = global_coord[1];
 
-                    std::list<BasicMaterial*> updatedMaterials;
+                    float depthMax = -1;
                     for (auto material : materials) {
-                        qDebug() << x << " in " << material->x - material->getSizeX() / 2 << " " << material->x + material->getSizeX() / 2;
-
-                        qDebug() << y << " in " << material->y - material->getSizeY() / 2 << " " << material->y + material->getSizeY() / 2;
-
                         if (material->x - material->getSizeX() / 2 <= x && x <= material->x + material->getSizeX() / 2 &&
                                 material->y - material->getSizeY() / 2 <= y && y <= material->y + material->getSizeY() / 2) {
+                            if (depthMax == -1 || depthMax < abs(material->depth)) {
+                                depthMax = abs(material->depth);
 
+                            }
+                        }
+                    }
 
+                    std::list<BasicMaterial*> updatedMaterials;
+                    for (auto material : materials) {
+                        if (material->x - material->getSizeX() / 2 <= x && x <= material->x + material->getSizeX() / 2 &&
+                                material->y - material->getSizeY() / 2 <= y && y <= material->y + material->getSizeY() / 2 &&
+                                depthMax - abs(material->depth) == 0.0f) {
                             continue;
                         }
                         updatedMaterials.push_back(material);
@@ -626,8 +645,9 @@ void GLWidget::LoadFile(QString Filename) {
             y = line_vector[1];
             z = line_vector[2];
 
-            // Need to be modified!
-            BasicMaterial* material = new BasicMaterial(x, y, -0.3f, 0.1f);
+            // Need to be modified!float depth = findDepth(posX, posY);
+            float depth = findDepth(x, y);
+            BasicMaterial* material = new BasicMaterial(x, y, depth);
             materials.push_back(material);
             setReferenceWidgetData();
             update();

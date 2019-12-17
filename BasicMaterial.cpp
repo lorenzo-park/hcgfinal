@@ -1,13 +1,10 @@
 #include "BasicMaterial.h"
 
-BasicMaterial::BasicMaterial(float x, float y, float depth, float cellHeight)
+BasicMaterial::BasicMaterial(float x, float y, float depth)
 {
     this->x = x;
     this->y = y;
-    this->cellSizeX = 0.083f;
-    this->cellSizeY = 0.083f;
-    this->cellSizeZ = cellHeight * 0.083f;
-    this->depth = -depth * 0.083f;
+    this->depth = -depth;
 }
 
 void BasicMaterial::draw()
@@ -15,10 +12,10 @@ void BasicMaterial::draw()
     // Draw base
     glPushMatrix();
     glTranslatef(x, -y, 0);
+    glTranslatef(0, 0, depth * scale - 1 * scale);
 
-    glTranslatef(0, 0, depth - 0.4f);
-    glScalef(cellSizeX, cellSizeY, cellSizeZ);
     glColor3f(color[0], color[1], color[2]);
+
     for (int i = 0; i < 6; ++i) {
         glBegin(GL_POLYGON);
         for (int j = 0; j < 4; ++j) {
@@ -36,15 +33,15 @@ void BasicMaterial::setScale(float x)
 
 float BasicMaterial::getSizeX()
 {
-    return this->cellSizeX * scale;
+    return this->cellSizeX;
 }
 
 float BasicMaterial::getSizeY()
 {
-    return this->cellSizeY * scale;
+    return this->cellSizeY;
 }
 
 float BasicMaterial::getSizeZ()
 {
-    return this->cellSizeZ * scale;
+    return this->cellSizeZ;
 }

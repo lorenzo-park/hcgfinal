@@ -7,7 +7,7 @@ class BasicMaterial
 {
 public:
     BasicMaterial();
-    BasicMaterial(float x, float y, float depth, float height);
+    BasicMaterial(float x, float y, float depth);
 
     void draw();
 
@@ -26,7 +26,7 @@ private:
 
     float color[3] = {1, 0, 0};
 
-    GLfloat scale = 3.0f;
+    GLfloat scale = 3.0f * 0.083f;
     GLfloat coords[6] [4] [3] = {
             { { +1.0f * scale, -1.0f * scale, +1.0f * scale }, { +1.0f * scale, -1.0f * scale, -1.0f * scale },
             { +1.0f * scale, +1.0f * scale, -1.0f * scale }, { +1.0f * scale, +1.0f * scale, +1.0f * scale } },
@@ -43,9 +43,9 @@ private:
         };
 
 
-    float cellSizeX = 0.1f;
-    float cellSizeY = 0.1f;
-    float cellSizeZ = 0.01f;
+    float cellSizeX = 2 * scale;
+    float cellSizeY = 2 * scale;
+    float cellSizeZ = 1.0f;
 };
 
 #endif // BASICMATERIAL_H
