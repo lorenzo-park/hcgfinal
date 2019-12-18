@@ -100,8 +100,6 @@ private:
     QPushButton *layerToggleBtn;
     QPushButton *addSubblockBtn;
 
-
-
 };
 
 #endif
