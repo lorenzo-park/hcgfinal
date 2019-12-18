@@ -51,6 +51,8 @@
 #include "glwidget.h"
 #include "window.h"
 #include "mainwindow.h"
+#include "materialchoose.h"
+#include "layertoggle.h"
 #include <QSlider>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -59,6 +61,8 @@
 #include <QDesktopWidget>
 #include <QApplication>
 #include <QMessageBox>
+
+
 
 Window::Window(MainWindow *mw)
     : mainWindow(mw)
@@ -119,7 +123,7 @@ Window::Window(MainWindow *mw)
     layerToggleBtn->setIcon(QIcon("layertoggleBtnicon.png"));
     layerToggleBtn->setIconSize(QSize(50,50));
     layerToggleBtn->setFixedSize(QSize(60,60));
-    connect(layerToggleBtn, &QPushButton::clicked, this, &Window::layerToggle);
+    connect(layerToggleBtn, &QPushButton::clicked, this, &Window::LayerToggle);
 
     addSubblockBtn = new QPushButton;
     addSubblockBtn->setStyleSheet("QPushButton { background-color:  rgb(0,0,255,50) } QPushButton:hover { background-color: rgb(0,0,255,30) } QPushButton:pressed{ background-color: rgb(0,0,255,70); }");
@@ -201,6 +205,9 @@ void Window::subBlockColor(){
 }
 
 void Window::addBlock(){
+    materialChoose* materialchoose = new materialChoose();
+    materialchoose->show();
+
     if (glWidget2D->getEditMode() == ADD_MODE)
         glWidget2D->setEditMode(DEFAULT_MODE);
     else
@@ -218,8 +225,9 @@ void Window::addLayer(){
 
 }
 
-void Window::layerToggle(){
-
+void Window::LayerToggle(){
+    layerToggle* layertoggle = new layerToggle();
+    layertoggle->show();
 }
 
 void Window::addSubblock(){
