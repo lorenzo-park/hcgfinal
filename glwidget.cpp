@@ -294,10 +294,9 @@ void GLWidget::initializeGL()
     glEnable(GL_LIGHTING);
 
     GLfloat lightPos1[] = { 0, 2, -5, 1 };
-    GLfloat diffuse1[] = { 1, 1, 0, 1 };
-    GLfloat specular1[] = { 1, 1, 0, 1 };
-    GLfloat ambient1[] = { 1, 1, 1, 1 };
-
+    GLfloat diffuse1[] = { 0.4f, 0.4f, 0.4f, 1.0f };
+    GLfloat specular1[] =  {1.0f, 1.0f, 1.0f, 1.0f };
+    GLfloat ambient1[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
     glEnable(GL_LIGHT0);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse1);
@@ -354,6 +353,8 @@ void GLWidget::paintGL()
             glMultMatrixf(curMM);
         }
 
+    GLfloat lightPos1[] = { 0, 2, -5, 1 };
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPos1);
     glPushMatrix();
 
     if (isViewerMode)
@@ -384,7 +385,6 @@ void GLWidget::paintGL()
 
     circuitBase->draw();
 //    glPopMatrix();
-    glDisable(GL_LIGHTING);
     for (auto material : materials) {
         material->draw();
     }
@@ -393,7 +393,6 @@ void GLWidget::paintGL()
         cursor -> draw();
     }
 
-    glEnable(GL_LIGHTING);
     glPopMatrix();
 }
 
