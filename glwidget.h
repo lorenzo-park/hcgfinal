@@ -113,6 +113,7 @@ public:
 
     int currentLayer = 0;
     std::list<int> layers = {0};
+    std::list<int> filteredLayers = {};
 
 public slots:
     float* findZ(float x, float y);

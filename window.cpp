@@ -231,6 +231,8 @@ void Window::addLayer(){
 
 void Window::LayerToggle(){
     layerToggle* layertoggle = new layerToggle();
+    layertoggle->initialize(glWidget2D);
+
     layertoggle->show();
 }
 

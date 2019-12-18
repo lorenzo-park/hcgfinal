@@ -253,6 +253,7 @@ void GLWidget::setReferenceWidgetData()
     if (!isViewerMode) {
         reference->materials = materials;
         reference->cursor = cursor;
+        reference->filteredLayers = filteredLayers;
         reference->update();
     } else {
         return;
@@ -386,9 +387,13 @@ void GLWidget::paintGL()
     circuitBase->draw();
 //    glPopMatrix();
     for (auto material : materials) {
+        if (std::find(filteredLayers.begin(), filteredLayers.end(), material->layer)
+                != filteredLayers.end()) {
+            continue;
+        }
         material->draw();
     }
-
+    qDebug() << this->filteredLayers.size();
     if (cursor != 0) {
         cursor -> draw();
     }
