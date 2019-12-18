@@ -23,6 +23,10 @@ LIBS += -lopengl32
 target.path = $$[QT_INSTALL_EXAMPLES]/opengl/hellogl2
 INSTALLS += target
 
+DISTFILES += \
+    phong.frag \
+    phong.vert
+
 FORMS += \
     layertoggle.ui \
     materialchoose.ui
