@@ -7,7 +7,7 @@ class BasicMaterial
 {
 public:
     BasicMaterial();
-    BasicMaterial(float x, float y, float depth);
+    BasicMaterial(float x, float y, float depth, int layer);
 
     void draw();
 

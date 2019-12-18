@@ -1,10 +1,11 @@
 #include "BasicMaterial.h"
 
-BasicMaterial::BasicMaterial(float x, float y, float depth)
+BasicMaterial::BasicMaterial(float x, float y, float depth, int layer)
 {
     this->x = x;
     this->y = y;
     this->depth = -depth;
+    this->layer = layer;
 }
 
 void BasicMaterial::draw()

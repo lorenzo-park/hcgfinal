@@ -732,7 +732,7 @@ void GLWidget::LoadFile(QString Filename) {
 
             // Need to be modified!float depth = findDepth(posX, posY);
             float depth = findDepth(x, y);
-            BasicMaterial* material = new BasicMaterial(x, y, depth);
+            BasicMaterial* material = new BasicMaterial(x, y, depth, currentLayer);
             materials.push_back(material);
             setReferenceWidgetData();
             update();
@@ -754,7 +754,7 @@ void GLWidget::fillMaterial(float ax, float ay, float bx, float by) {
             float posX = beginX + 0.5f * i;
             float posY = beginY + 0.5f * j;
             float depth = findDepth(posX, posY);
-            BasicMaterial* material = new BasicMaterial(posX, posY, depth);
+            BasicMaterial* material = new BasicMaterial(posX, posY, depth, currentLayer);
             materials.push_back(material);
         }
     }
@@ -779,6 +779,10 @@ void GLWidget::eraseMaterial(float ax, float ay, float bx, float by) {
 
             float depthMax = -1;
             for (auto material : materials) {
+                if (material->layer != currentLayer) {
+                    continue;
+                }
+
                 if (material->x - material->getSizeX() / 2 <= x && x <= material->x + material->getSizeX() / 2 &&
                         material->y - material->getSizeY() / 2 <= y && y <= material->y + material->getSizeY() / 2) {
                     if (depthMax == -1 || depthMax < abs(material->depth)) {
@@ -804,4 +808,19 @@ void GLWidget::eraseMaterial(float ax, float ay, float bx, float by) {
 
     setReferenceWidgetData();
     update();
+}
+
+std::list<BasicMaterial*> GLWidget::getMaterials()
+{
+    return materials;
+}
+
+void GLWidget::setCurrentLayer(int layerNum)
+{
+    currentLayer = layerNum;
+}
+
+int GLWidget::getCurrentLayer()
+{
+    return currentLayer;
 }

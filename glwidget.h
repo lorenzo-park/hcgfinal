@@ -111,6 +111,9 @@ public:
     float pressedCoordX = -100.0f, pressedCoordY = -100.0f;
     float releasedCoordX = -100.0f, releasedCoordY = -100.0f;
 
+    int currentLayer = 0;
+    std::list<int> layers = {0};
+
 public slots:
     float* findZ(float x, float y);
     float findDepth(float x, float y);
@@ -138,6 +141,9 @@ public slots:
 
     void fillMaterial(float ax, float ay, float bx, float by);
     void eraseMaterial(float ax, float ay, float bx, float by);
+    std::list<BasicMaterial*> getMaterials();
+    void setCurrentLayer(int layerNum);
+    int getCurrentLayer();
 
 signals:
     void xRotationChanged(int angle);
