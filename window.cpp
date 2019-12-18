@@ -62,7 +62,7 @@
 #include <QApplication>
 #include <QMessageBox>
 
-QString buildPath = "../hcgfinal/";
+QString buildPath = "../hcgfinal/images/";
 
 Window::Window(MainWindow *mw)
     : mainWindow(mw)
