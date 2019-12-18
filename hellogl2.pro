@@ -18,3 +18,7 @@ LIBS += -lopengl32
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/opengl/hellogl2
 INSTALLS += target
+
+DISTFILES += \
+    phong.frag \
+    phong.vert
