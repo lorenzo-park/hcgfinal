@@ -23,6 +23,8 @@ public:
     float getSizeY();
     float getSizeZ();
 
+    void setColor(float r, float g, float b);
+
 private:
 
     float color[3] = {0, 1, 1};

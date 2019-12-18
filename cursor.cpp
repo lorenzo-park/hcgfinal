@@ -52,3 +52,9 @@ float Cursor::getSizeZ()
 {
     return this->cellSizeZ;
 }
+
+void Cursor::setColor(float r, float g, float b) {
+    this->color[0] = r;
+    this->color[1] = g;
+    this->color[2] = b;
+}

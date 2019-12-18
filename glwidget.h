@@ -108,6 +108,8 @@ public:
     float transl_x, transl_y, transl_z;
     float global_scale =1;
 
+    float pressedCoordX = -100.0f, pressedCoordY = -100.0f;
+    float releasedCoordX = -100.0f, releasedCoordY = -100.0f;
 
 public slots:
     float* findZ(float x, float y);
@@ -133,6 +135,9 @@ public slots:
 
     EditMode getEditMode();
     void setEditMode(EditMode editmode);
+
+    void fillMaterial(float ax, float ay, float bx, float by);
+    void eraseMaterial(float ax, float ay, float bx, float by);
 
 signals:
     void xRotationChanged(int angle);

@@ -433,14 +433,11 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 
             if (!isViewerMode)
             {
-
                 switch(activeMode) {
                 case DEFAULT_MODE: {
-
                     break;
                 }
                 case ADD_MODE:{
-
                     float x = global_coord[0];
                     float y = global_coord[1];
 
@@ -449,12 +446,18 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 
 
                     float depth = findDepth(posX, posY);
+
+                    if (pressedCoordX + 100.0f == 0.0f && pressedCoordY + 100.0f == 0.0f) {
+                        pressedCoordX = posX;
+                        pressedCoordY = posY;
+                    }
+
                     qDebug() << "Added at" << x << y << posX << posY << depth;
 
-                    BasicMaterial* material = new BasicMaterial(posX, posY, depth);
-                    materials.push_back(material);
-                    setReferenceWidgetData();
-                    update();
+//                    BasicMaterial* material = new BasicMaterial(posX, posY, depth);
+//                    materials.push_back(material);
+//                    setReferenceWidgetData();
+//                    update();
 
                     break;
                 }
@@ -463,30 +466,14 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
                     float x = global_coord[0];
                     float y = global_coord[1];
 
-                    float depthMax = -1;
-                    for (auto material : materials) {
-                        if (material->x - material->getSizeX() / 2 <= x && x <= material->x + material->getSizeX() / 2 &&
-                                material->y - material->getSizeY() / 2 <= y && y <= material->y + material->getSizeY() / 2) {
-                            if (depthMax == -1 || depthMax < abs(material->depth)) {
-                                depthMax = abs(material->depth);
+                    float posX = round(2*x) / 2.0f;
+                    float posY = round(2*y) / 2.0f;
 
-                            }
-                        }
+                    if (pressedCoordX + 100.0f == 0.0f && pressedCoordY + 100.0f == 0.0f) {
+                        pressedCoordX = posX;
+                        pressedCoordY = posY;
                     }
 
-                    std::list<BasicMaterial*> updatedMaterials;
-                    for (auto material : materials) {
-                        if (material->x - material->getSizeX() / 2 <= x && x <= material->x + material->getSizeX() / 2 &&
-                                material->y - material->getSizeY() / 2 <= y && y <= material->y + material->getSizeY() / 2 &&
-                                depthMax - abs(material->depth) == 0.0f) {
-                            continue;
-                        }
-                        updatedMaterials.push_back(material);
-                    }
-                    materials.clear();
-                    materials = updatedMaterials;
-                    setReferenceWidgetData();
-                    update();
                     break;
                 }
                 }
@@ -512,18 +499,77 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *event){
-    if(event->buttons() == Qt::LeftButton){
-        check_mouse = 0;
-        angle = 0;
-    }
-    else if(event->buttons() == Qt::RightButton){
-        check_mouse = 0;
-        scale_value = 1;
-    }
-    else if(event->buttons() == Qt::MiddleButton){
-        check_mouse = 0;
-    }
+    if (!isViewerMode) {
+        if (releasedCoordX + 100.0f == 0.0f && releasedCoordY + 100.0f == 0.0f &&
+                pressedCoordX + 100.0f != 0.0f && pressedCoordY + 100.0f != 0.0f) {
 
+            switch(activeMode) {
+            case DEFAULT_MODE: {
+                break;
+            }
+            case ADD_MODE: {
+                float* global_coord = findZ(event->x(),event->y());
+
+                float x = global_coord[0];
+                float y = global_coord[1];
+
+                float posX = round(2*x) / 2.0f;
+                float posY = round(2*y) / 2.0f;
+
+                releasedCoordX = posX;
+                releasedCoordY = posY;
+
+                qDebug() << pressedCoordX << pressedCoordY << releasedCoordX << releasedCoordY;
+                fillMaterial(pressedCoordX, pressedCoordY, releasedCoordX, releasedCoordY);
+
+                pressedCoordX = -100.0f;
+                pressedCoordY = -100.0f;
+                releasedCoordX = -100.0f;
+                releasedCoordY = -100.0f;
+
+                break;
+            }
+            case DELETE_MODE: {
+                float* global_coord = findZ(event->x(),event->y());
+
+                float x = global_coord[0];
+                float y = global_coord[1];
+
+                float posX = round(2*x) / 2.0f;
+                float posY = round(2*y) / 2.0f;
+
+                releasedCoordX = posX;
+                releasedCoordY = posY;
+
+                qDebug() << pressedCoordX << pressedCoordY << releasedCoordX << releasedCoordY;
+                eraseMaterial(pressedCoordX, pressedCoordY, releasedCoordX, releasedCoordY);
+
+                pressedCoordX = -100.0f;
+                pressedCoordY = -100.0f;
+                releasedCoordX = -100.0f;
+                releasedCoordY = -100.0f;
+
+                break;
+            }
+            }
+
+
+        }
+    }
+    else
+    {
+        if(event->buttons() == Qt::LeftButton){
+            check_mouse = 0;
+            angle = 0;
+        }
+        else if(event->buttons() == Qt::RightButton){
+            check_mouse = 0;
+            scale_value = 1;
+        }
+        else if(event->buttons() == Qt::MiddleButton){
+            check_mouse = 0;
+        }
+    }
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event)
@@ -545,6 +591,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     }
     case DELETE_MODE:{
         cursor = new Cursor(posX, posY, depth);
+        cursor->setColor(1.0f, 1.0f, 1.0f);
         setReferenceWidgetData();
         update();
         break;
@@ -690,6 +737,70 @@ void GLWidget::LoadFile(QString Filename) {
             update();
         }
     }
+}
 
+void GLWidget::fillMaterial(float ax, float ay, float bx, float by) {
+    float beginX = fmin(ax, bx);
+    float endX = fmax(ax, bx);
+    int stepX = (int) ((endX - beginX) / 0.5f);
 
+    float beginY = fmin(ay, by);
+    float endY = fmax(ay, by);
+    int stepY = (int) ((endY - beginY) / 0.5f);
+
+    for (int i=0; i < stepX + 1; i++) {
+        for (int j=0; j < stepY + 1; j++) {
+            float posX = beginX + 0.5f * i;
+            float posY = beginY + 0.5f * j;
+            float depth = findDepth(posX, posY);
+            BasicMaterial* material = new BasicMaterial(posX, posY, depth);
+            materials.push_back(material);
+        }
+    }
+
+    setReferenceWidgetData();
+    update();
+}
+
+void GLWidget::eraseMaterial(float ax, float ay, float bx, float by) {
+    float beginX = fmin(ax, bx);
+    float endX = fmax(ax, bx);
+    int stepX = (int) ((endX - beginX) / 0.5f);
+
+    float beginY = fmin(ay, by);
+    float endY = fmax(ay, by);
+    int stepY = (int) ((endY - beginY) / 0.5f);
+
+    for (int i=0; i < stepX + 1; i++) {
+        for (int j=0; j < stepY + 1; j++) {
+            float x = beginX + 0.5f * i;
+            float y = beginY + 0.5f * j;
+
+            float depthMax = -1;
+            for (auto material : materials) {
+                if (material->x - material->getSizeX() / 2 <= x && x <= material->x + material->getSizeX() / 2 &&
+                        material->y - material->getSizeY() / 2 <= y && y <= material->y + material->getSizeY() / 2) {
+                    if (depthMax == -1 || depthMax < abs(material->depth)) {
+                        depthMax = abs(material->depth);
+
+                    }
+                }
+            }
+
+            std::list<BasicMaterial*> updatedMaterials;
+            for (auto material : materials) {
+                if (material->x - material->getSizeX() / 2 <= x && x <= material->x + material->getSizeX() / 2 &&
+                        material->y - material->getSizeY() / 2 <= y && y <= material->y + material->getSizeY() / 2 &&
+                        depthMax - abs(material->depth) == 0.0f) {
+                    continue;
+                }
+                updatedMaterials.push_back(material);
+            }
+            materials.clear();
+            materials = updatedMaterials;
+        }
+    }
+
+    setReferenceWidgetData();
+    update();
 }
