@@ -52,6 +52,7 @@
 #include "CircuitBase.h"
 #include "BasicMaterial.h"
 #include "cursor.h"
+#include "materialchoose.h"
 #include <QMouseEvent>
 #include <QOpenGLShaderProgram>
 #include <QCoreApplication>
@@ -420,7 +421,6 @@ void GLWidget::resizeGL(int w, int h)
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
     m_lastPos = event->pos();
-
     float* global_coord = findZ(event->x(),event->y());
         //left_rotation
         if (event->buttons() == Qt::LeftButton) {
@@ -437,6 +437,8 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
                     break;
                 }
                 case ADD_MODE:{
+
+
                     float x = global_coord[0];
                     float y = global_coord[1];
 

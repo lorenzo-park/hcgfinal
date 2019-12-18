@@ -80,7 +80,7 @@ private slots:
     void addBlock();
     void deleteBlock();
     void addLayer();
-    void layerToggle();
+    void LayerToggle();
     void addSubblock();
 
 
