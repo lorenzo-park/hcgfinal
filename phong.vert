@@ -1,10 +1,17 @@
-attribute highp vec4 qt_Vertex;
-attribute highp vec4 qt_MultiTexCoord0;
-uniform highp mat4 qt_ModelViewProjectionMatrix;
-varying highp vec4 qt_TexCoord0;
+#version 140
+//#define GL_compatibility_profile 1
+#extension GL_ARB_compatibility: enable
 
-void main(void)
+uniform mat4 matProj;
+uniform mat4 matModel;
+out vec3 normal;
+out vec3 p;
+
+void main()
 {
-    gl_Position = qt_ModelViewProjectionMatrix * qt_Vertex;
-    qt_TexCoord0 = qt_MultiTexCoord0;
+   // Clip Coordinate
+   gl_Position = matProj * matModel * (gl_Vertex);
+   p = vec3(matModel * (gl_Vertex));
+   normal = vec3(normalize(transpose(inverse(matModel)) * vec4(gl_Normal,0)));
+
 }
