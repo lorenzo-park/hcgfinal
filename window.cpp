@@ -62,7 +62,7 @@
 #include <QApplication>
 #include <QMessageBox>
 
-
+QString buildPath = "../hcgfinal/";
 
 Window::Window(MainWindow *mw)
     : mainWindow(mw)
@@ -85,49 +85,49 @@ Window::Window(MainWindow *mw)
 
     selectBtn = new QPushButton;
     selectBtn->setStyleSheet("QPushButton { background-color: rgb(0,0,255,50) } QPushButton:hover { background-color: rgb(0,0,255,30) } QPushButton:pressed{ background-color: rgb(0,0,255,70); }");
-    selectBtn->setIcon(QIcon("selectingBtnIcon2.png"));
+    selectBtn->setIcon(QIcon(buildPath+"selectingBtnIcon2.png"));
     selectBtn->setIconSize(QSize(50,50));
     selectBtn->setFixedSize(QSize(60,60));
     connect(selectBtn, &QPushButton::clicked, this, &Window::select);
 
     subBlockColorBtn = new QPushButton;
     subBlockColorBtn->setStyleSheet("QPushButton { background-color: rgb(0,0,255,50) } QPushButton:hover { background-color: rgb(0,0,255,30) } QPushButton:pressed{ background-color: rgb(0,0,255,70); }");
-    subBlockColorBtn->setIcon(QIcon("subblockcolorBtnicon.png"));
+    subBlockColorBtn->setIcon(QIcon(buildPath+"subblockcolorBtnicon.png"));
     subBlockColorBtn->setIconSize(QSize(80,80));
     subBlockColorBtn->setFixedSize(QSize(60,60));
     connect(subBlockColorBtn, &QPushButton::clicked, this, &Window::subBlockColor);
 
     addBlockBtn = new QPushButton;
     addBlockBtn->setStyleSheet("QPushButton { background-color:  rgb(0,0,255,50) } QPushButton:hover { background-color: rgb(0,0,255,30) } QPushButton:pressed{ background-color: rgb(0,0,255,70); }");
-    addBlockBtn->setIcon(QIcon("addblockBtnicon.png"));
+    addBlockBtn->setIcon(QIcon(buildPath+"addblockBtnicon.png"));
     addBlockBtn->setIconSize(QSize(100,100));
     addBlockBtn->setFixedSize(QSize(60,60));
     connect(addBlockBtn, &QPushButton::clicked, this, &Window::addBlock);
 
     deleteBlockBtn = new QPushButton;
     deleteBlockBtn->setStyleSheet("QPushButton { background-color:  rgb(0,0,255,50) } QPushButton:hover { background-color: rgb(0,0,255,30) } QPushButton:pressed{ background-color: rgb(0,0,255,70); }");
-    deleteBlockBtn->setIcon(QIcon("deleteblockBtnicon.png"));
+    deleteBlockBtn->setIcon(QIcon(buildPath+"deleteblockBtnicon.png"));
     deleteBlockBtn->setIconSize(QSize(80,80));
     deleteBlockBtn->setFixedSize(QSize(60,60));
     connect(deleteBlockBtn, &QPushButton::clicked, this, &Window::deleteBlock);
 
     addLayerBtn =  new QPushButton;
     addLayerBtn->setStyleSheet("QPushButton { background-color:  rgb(0,0,255,50) } QPushButton:hover { background-color: rgb(0,0,255,30) } QPushButton:pressed{ background-color: rgb(0,0,255,70); }");
-    addLayerBtn->setIcon(QIcon("addlayerBtnicon.png"));
+    addLayerBtn->setIcon(QIcon(buildPath+"addlayerBtnicon.png"));
     addLayerBtn->setIconSize(QSize(50,50));
     addLayerBtn->setFixedSize(QSize(60,60));
     connect(addLayerBtn, &QPushButton::clicked, this, &Window::addLayer);
 
     layerToggleBtn = new QPushButton;
     layerToggleBtn->setStyleSheet("QPushButton { background-color:  rgb(0,0,255,50) } QPushButton:hover { background-color: rgb(0,0,255,30) } QPushButton:pressed{ background-color: rgb(0,0,255,70); }");
-    layerToggleBtn->setIcon(QIcon("layertoggleBtnicon.png"));
+    layerToggleBtn->setIcon(QIcon(buildPath+"layertoggleBtnicon.png"));
     layerToggleBtn->setIconSize(QSize(50,50));
     layerToggleBtn->setFixedSize(QSize(60,60));
     connect(layerToggleBtn, &QPushButton::clicked, this, &Window::LayerToggle);
 
     addSubblockBtn = new QPushButton;
     addSubblockBtn->setStyleSheet("QPushButton { background-color:  rgb(0,0,255,50) } QPushButton:hover { background-color: rgb(0,0,255,30) } QPushButton:pressed{ background-color: rgb(0,0,255,70); }");
-    addSubblockBtn->setIcon(QIcon("addsubblockBtn.png"));
+    addSubblockBtn->setIcon(QIcon(buildPath+"addsubblockBtn.png"));
     addSubblockBtn->setIconSize(QSize(50,50));
     addSubblockBtn->setFixedSize(QSize(60,60));
     connect(addSubblockBtn, &QPushButton::clicked, this, &Window::addSubblock);
