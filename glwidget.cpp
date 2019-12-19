@@ -492,7 +492,8 @@ void GLWidget::paintGL()
     for (auto material : materials) {
         if (std::find(filteredLayers.begin(), filteredLayers.end(), material->layer)
                 != filteredLayers.end()) {
-            material->drawTranslucent(0.5f);
+            if (isViewerMode)
+                material->drawTranslucent(0.5f);
             continue;
         }
 

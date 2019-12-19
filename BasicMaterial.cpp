@@ -82,12 +82,12 @@ void BasicMaterial::drawTranslucent(float alpha)
     glPushMatrix();
 
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 
     glTranslatef(x, -y, 0);
     glTranslatef(0, 0, depth * 2 * scale - 2 * scale);
 
-    glColor4f(color[0], color[1], color[2], 1-alpha);
+    glColor4f(color[0], color[1], color[2], alpha);
 
     for (int i = 0; i < 6; ++i) {
         glBegin(GL_POLYGON);
