@@ -3,14 +3,17 @@
 
 #include <QOpenGLFunctions>
 
+class GLWidget;
 
 class Cursor
 {
 public:
     Cursor();
-    Cursor(float x, float y, float depth);
+    Cursor(float x, float y, float depth,GLWidget *gl);
 
-    void draw();
+    GLWidget *parent_gl;
+
+    void draw(std::string materialTex);
 
     void setScale(float x);
     float x;

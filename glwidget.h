@@ -61,6 +61,7 @@
 #include "CircuitBase.h"
 #include "BasicMaterial.h"
 #include "Cursor.h"
+#include "window.h"
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 
@@ -75,7 +76,7 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
     Q_OBJECT
 
 public:
-    GLWidget(QWidget *parent = 0);
+    GLWidget(Window *parent_w,QWidget *parent = 0);
     ~GLWidget();
 
     static bool isTransparent() { return m_transparent; }
@@ -114,6 +115,12 @@ public:
     int currentLayer = 0;
     std::list<int> layers = {0};
     std::list<int> filteredLayers = {};
+    Window *parent_window;
+    GLfloat lightPos[4];
+    GLfloat diffuse[100][4];
+    GLfloat specular[4];
+    GLfloat ambient[100][4];
+
 
 public slots:
     float* findZ(float x, float y);
@@ -142,9 +149,6 @@ public slots:
 
     void fillMaterial(float ax, float ay, float bx, float by);
     void eraseMaterial(float ax, float ay, float bx, float by);
-    std::list<BasicMaterial*> getMaterials();
-    void setCurrentLayer(int layerNum);
-    int getCurrentLayer();
 
 signals:
     void xRotationChanged(int angle);

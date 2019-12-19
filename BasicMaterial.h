@@ -3,11 +3,13 @@
 
 #include <QOpenGLFunctions>
 
+class GLWidget;
+
 class BasicMaterial
 {
 public:
     BasicMaterial();
-    BasicMaterial(float x, float y, float depth, int layer);
+    BasicMaterial(GLWidget *parent,float x, float y, float depth,QString mat);
 
     void draw();
     void drawTranslucent(float alpha);
@@ -22,6 +24,10 @@ public:
     float getSizeX();
     float getSizeY();
     float getSizeZ();
+
+    GLWidget *parent_gl;
+
+    std::string materialTex="";
 
 private:
 

@@ -1,7 +1,6 @@
 HEADERS       = glwidget.h \
                 BasicMaterial.h \
                 CircuitBase.h \
-                addlayer.h \
                 cursor.h \
                 layertoggle.h \
                 materialchoose.h \
@@ -10,7 +9,6 @@ HEADERS       = glwidget.h \
 SOURCES       = glwidget.cpp \
                 BasicMaterial.cpp \
                 CircuitBase.cpp \
-                addlayer.cpp \
                 cursor.cpp \
                 layertoggle.cpp \
                 main.cpp \
@@ -30,6 +28,5 @@ DISTFILES += \
     phong.vert
 
 FORMS += \
-    addlayer.ui \
     layertoggle.ui \
     materialchoose.ui

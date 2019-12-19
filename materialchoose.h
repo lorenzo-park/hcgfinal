@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QListWidget>
 #include <QListWidgetItem>
+#include <string>
 
 namespace Ui {
 class materialChoose;
@@ -16,6 +17,7 @@ class materialChoose : public QWidget
 public:
     explicit materialChoose(QWidget *parent = nullptr);
     ~materialChoose();
+    QString material_text="-1";
 
 private slots:
     void on_chooseBtn_clicked();

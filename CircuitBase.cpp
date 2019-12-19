@@ -12,6 +12,7 @@ void CircuitBase::draw()
     glColor3f(1, 1, 1);
     // Draw base
     glPushMatrix();
+
     glScalef(1.0f, 1.0f, 0.08f);
     for (int i = 0; i < 6; ++i) {
         glBegin(GL_POLYGON);
@@ -20,6 +21,7 @@ void CircuitBase::draw()
         }
         glEnd();
     }
+
     glPopMatrix();
 }
 
