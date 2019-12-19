@@ -307,66 +307,66 @@ void GLWidget::initializeGL()
     diffuse[0][3] = 1;
 
     ambient[1][0] = 0;
-    ambient[1][1] = 1;
-    ambient[1][2] = 0;
+    ambient[1][1] = 0;
+    ambient[1][2] = 1;
     ambient[1][3] = 1;
     diffuse[1][0] = 0;
-    diffuse[1][1] = 1;
-    diffuse[1][2] = 0;
+    diffuse[1][1] = 0;
+    diffuse[1][2] = 1;
     diffuse[1][3] = 1;
 
     ambient[2][0] = 0;
     ambient[2][1] = 1;
-    ambient[2][2] = 1;
+    ambient[2][2] = 0;
     ambient[2][3] = 1;
     diffuse[2][0] = 0;
     diffuse[2][1] = 1;
-    diffuse[2][2] = 1;
+    diffuse[2][2] = 0;
     diffuse[2][3] = 1;
 
-    ambient[3][0] = 1;
-    ambient[3][1] = 0;
-    ambient[3][2] = 0;
+    ambient[3][0] = 0;
+    ambient[3][1] = 1;
+    ambient[3][2] = 1;
     ambient[3][3] = 1;
-    diffuse[3][0] = 1;
-    diffuse[3][1] = 0;
-    diffuse[3][2] = 0;
+    diffuse[3][0] = 0;
+    diffuse[3][1] = 1;
+    diffuse[3][2] = 1;
     diffuse[3][3] = 1;
 
     ambient[4][0] = 1;
     ambient[4][1] = 0;
-    ambient[4][2] = 1;
+    ambient[4][2] = 0;
     ambient[4][3] = 1;
     diffuse[4][0] = 1;
     diffuse[4][1] = 0;
-    diffuse[4][2] = 1;
+    diffuse[4][2] = 0;
     diffuse[4][3] = 1;
 
     ambient[5][0] = 1;
-    ambient[5][1] = 1;
-    ambient[5][2] = 0;
+    ambient[5][1] = 0;
+    ambient[5][2] = 1;
     ambient[5][3] = 1;
     diffuse[5][0] = 1;
-    diffuse[5][1] = 1;
-    diffuse[5][2] = 0;
+    diffuse[5][1] = 0;
+    diffuse[5][2] = 1;
     diffuse[5][3] = 1;
 
-    ambient[6][0] = 0.5f;
-    ambient[6][1] = 0.7f;
-    ambient[6][2] = 0.9f;
+    ambient[6][0] = 1;
+    ambient[6][1] = 1;
+    ambient[6][2] = 0;
     ambient[6][3] = 1;
-    diffuse[6][0] = 0.5f;
-    diffuse[6][1] = 0.7f;
-    diffuse[6][2] = 0.9f;
+    diffuse[6][0] = 1;
+    diffuse[6][1] = 1;
+    diffuse[6][2] = 0;
     diffuse[6][3] = 1;
 
-    ambient[7][0] = 0.9f;
-    ambient[7][1] = 0.7f;
-    ambient[7][2] = 0.5f;
+    ambient[7][0] = 0.3;
+    ambient[7][1] = 0.5;
+    ambient[7][2] = 0.7;
     ambient[7][3] = 1;
-    diffuse[7][0] = 0.9f;
-    diffuse[7][1] = 0.7f;
-    diffuse[7][2] = 0.5f;
+    diffuse[7][0] = 0.3f;
+    diffuse[7][1] = 0.5f;
+    diffuse[7][2] = 0.7f;
     diffuse[7][3] = 1;
 
     ambient[8][0] = 0.7f;
