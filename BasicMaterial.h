@@ -10,6 +10,7 @@ public:
     BasicMaterial(float x, float y, float depth, int layer);
 
     void draw();
+    void drawTranslucent(float alpha);
 
     void setScale(float x);
     float x;

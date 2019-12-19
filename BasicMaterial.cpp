@@ -27,6 +27,32 @@ void BasicMaterial::draw()
     glPopMatrix();
 }
 
+void BasicMaterial::drawTranslucent(float alpha)
+{
+
+    // Draw base
+    glPushMatrix();
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+    glTranslatef(x, -y, 0);
+    glTranslatef(0, 0, depth * 2 * scale - 2 * scale);
+
+    glColor4f(color[0], color[1], color[2], alpha);
+
+    for (int i = 0; i < 6; ++i) {
+        glBegin(GL_POLYGON);
+        for (int j = 0; j < 4; ++j) {
+            glVertex3f(coords[i] [j] [0], coords[i] [j] [1], coords[i] [j] [2]);
+        }
+        glEnd();
+    }
+
+    glDisable(GL_BLEND);
+    glPopMatrix();
+}
+
 void BasicMaterial::setScale(float x)
 {
     scale = x;

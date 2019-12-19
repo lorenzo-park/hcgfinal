@@ -289,7 +289,9 @@ void GLWidget::initializeGL()
 
     initializeOpenGLFunctions();
     glClearColor(0, 0, 0, 0);
+
     glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
     glShadeModel(GL_FLAT);
 
     glEnable(GL_LIGHTING);
@@ -384,15 +386,25 @@ void GLWidget::paintGL()
 
 //    qDebug()<<"scale" << m_scale;
 
+
     circuitBase->draw();
+
 //    glPopMatrix();
+
+    glEnable(GL_CULL_FACE);
     for (auto material : materials) {
         if (std::find(filteredLayers.begin(), filteredLayers.end(), material->layer)
                 != filteredLayers.end()) {
+            if (isViewerMode)
+                material->drawTranslucent(0.05f);
             continue;
         }
+
         material->draw();
     }
+
+    glDisable(GL_CULL_FACE);
+
     qDebug() << this->filteredLayers.size();
     if (cursor != 0) {
         cursor -> draw();
