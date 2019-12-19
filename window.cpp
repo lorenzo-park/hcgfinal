@@ -53,6 +53,7 @@
 #include "mainwindow.h"
 #include "materialchoose.h"
 #include "layertoggle.h"
+#include "addlayer.h"
 #include <QSlider>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -222,7 +223,10 @@ void Window::deleteBlock(){
 }
 
 void Window::addLayer(){
-
+    addlayer* al = new addlayer();
+    al->target = glWidget2D;
+    al->updateListWidgetItems();
+    al->show();
 }
 
 void Window::LayerToggle(){
