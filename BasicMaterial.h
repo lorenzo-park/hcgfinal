@@ -9,7 +9,7 @@ class BasicMaterial
 {
 public:
     BasicMaterial();
-    BasicMaterial(GLWidget *parent,float x, float y, float depth,QString mat);
+    BasicMaterial(GLWidget *parent,float x, float y, float depth, int layer, QString mat);
 
     void draw();
     void drawTranslucent(float alpha);

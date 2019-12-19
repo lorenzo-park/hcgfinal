@@ -492,8 +492,7 @@ void GLWidget::paintGL()
     for (auto material : materials) {
         if (std::find(filteredLayers.begin(), filteredLayers.end(), material->layer)
                 != filteredLayers.end()) {
-            if (isViewerMode)
-                material->drawTranslucent(0.05f);
+            material->drawTranslucent(0.5f);
             continue;
         }
 
@@ -846,7 +845,7 @@ void GLWidget::LoadFile(QString Filename) {
 
             // Need to be modified!float depth = findDepth(posX, posY);
             float depth = findDepth(x, y);
-            BasicMaterial* material = new BasicMaterial(this,x, y, depth,parent_window->materialchoose->material_text);
+            BasicMaterial* material = new BasicMaterial(this,x, y, depth, currentLayer, parent_window->materialchoose->material_text);
             materials.push_back(material);
             setReferenceWidgetData();
             update();
@@ -863,12 +862,23 @@ void GLWidget::fillMaterial(float ax, float ay, float bx, float by) {
     float endY = fmax(ay, by);
     int stepY = (int) ((endY - beginY) / 0.5f);
 
+    float maxDepth = 0;
     for (int i=0; i < stepX + 1; i++) {
         for (int j=0; j < stepY + 1; j++) {
             float posX = beginX + 0.5f * i;
             float posY = beginY + 0.5f * j;
             float depth = findDepth(posX, posY);
-            BasicMaterial* material = new BasicMaterial(this,posX, posY, depth,parent_window->materialchoose->material_text);
+            if (maxDepth < depth) {
+                maxDepth = depth;
+            }
+        }
+    }
+
+    for (int i=0; i < stepX + 1; i++) {
+        for (int j=0; j < stepY + 1; j++) {
+            float posX = beginX + 0.5f * i;
+            float posY = beginY + 0.5f * j;
+            BasicMaterial* material = new BasicMaterial(this,posX, posY, maxDepth, currentLayer, parent_window->materialchoose->material_text);
             materials.push_back(material);
         }
     }
