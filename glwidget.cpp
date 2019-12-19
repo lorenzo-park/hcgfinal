@@ -69,9 +69,10 @@
 
 bool GLWidget::m_transparent = false;
 
-GLWidget::GLWidget(QWidget *parent)
+GLWidget::GLWidget(Window *parent_w,QWidget *parent)
     : QOpenGLWidget(parent)
 {
+    parent_window=parent_w;
     m_xRot=0;
     m_yRot=0;
     m_zRot=0;
@@ -293,16 +294,112 @@ void GLWidget::initializeGL()
 
     glEnable(GL_LIGHTING);
 
-    GLfloat lightPos1[] = { 0, 2, -5, 1 };
-    GLfloat diffuse1[] = { 0.4f, 0.4f, 0.4f, 1.0f };
-    GLfloat specular1[] =  {1.0f, 1.0f, 1.0f, 1.0f };
-    GLfloat ambient1[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    ambient[0][0] = 1;
+    ambient[0][1] = 1;
+    ambient[0][2] = 1;
+    ambient[0][3] = 1;
+    diffuse[0][0] = 1;
+    diffuse[0][1] = 1;
+    diffuse[0][2] = 1;
+    diffuse[0][3] = 1;
 
+    ambient[1][0] = 0;
+    ambient[1][1] = 1;
+    ambient[1][2] = 0;
+    ambient[1][3] = 1;
+    diffuse[1][0] = 0;
+    diffuse[1][1] = 1;
+    diffuse[1][2] = 0;
+    diffuse[1][3] = 1;
+
+    ambient[2][0] = 0;
+    ambient[2][1] = 1;
+    ambient[2][2] = 1;
+    ambient[2][3] = 1;
+    diffuse[2][0] = 0;
+    diffuse[2][1] = 1;
+    diffuse[2][2] = 1;
+    diffuse[2][3] = 1;
+
+    ambient[3][0] = 1;
+    ambient[3][1] = 0;
+    ambient[3][2] = 0;
+    ambient[3][3] = 1;
+    diffuse[3][0] = 1;
+    diffuse[3][1] = 0;
+    diffuse[3][2] = 0;
+    diffuse[3][3] = 1;
+
+    ambient[4][0] = 1;
+    ambient[4][1] = 0;
+    ambient[4][2] = 1;
+    ambient[4][3] = 1;
+    diffuse[4][0] = 1;
+    diffuse[4][1] = 0;
+    diffuse[4][2] = 1;
+    diffuse[4][3] = 1;
+
+    ambient[5][0] = 1;
+    ambient[5][1] = 1;
+    ambient[5][2] = 0;
+    ambient[5][3] = 1;
+    diffuse[5][0] = 1;
+    diffuse[5][1] = 1;
+    diffuse[5][2] = 0;
+    diffuse[5][3] = 1;
+
+    ambient[6][0] = 0.5f;
+    ambient[6][1] = 0.7f;
+    ambient[6][2] = 0.9f;
+    ambient[6][3] = 1;
+    diffuse[6][0] = 0.5f;
+    diffuse[6][1] = 0.7f;
+    diffuse[6][2] = 0.9f;
+    diffuse[6][3] = 1;
+
+    ambient[7][0] = 0.9f;
+    ambient[7][1] = 0.7f;
+    ambient[7][2] = 0.5f;
+    ambient[7][3] = 1;
+    diffuse[7][0] = 0.9f;
+    diffuse[7][1] = 0.7f;
+    diffuse[7][2] = 0.5f;
+    diffuse[7][3] = 1;
+
+    ambient[8][0] = 0.7f;
+    ambient[8][1] = 0.5f;
+    ambient[8][2] = 0.9f;
+    ambient[8][3] = 1;
+    diffuse[8][0] = 0.7f;
+    diffuse[8][1] = 0.5f;
+    diffuse[8][2] = 0.9f;
+    diffuse[8][3] = 1;
+
+    ambient[9][0] = 0;
+    ambient[9][1] = 0;
+    ambient[9][2] = 0;
+    ambient[9][3] = 1;
+    diffuse[9][0] = 0;
+    diffuse[9][1] = 0;
+    diffuse[9][2] = 0;
+    diffuse[9][3] = 1;
+
+
+    lightPos[0] = 10;
+    lightPos[1] = 10;
+    lightPos[2] = 0;
+    lightPos[3] = 1;
+    specular[0] = 1;
+    specular[1] = 1;
+    specular[2] = 1;
+    specular[3] = 1;
+    //for bacsic material
     glEnable(GL_LIGHT0);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse1);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, specular1);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, ambient1);
-    glLightfv(GL_LIGHT0, GL_POSITION, lightPos1);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse[0]);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambient[0]);
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+    //for circuit base
 
     // Initialize base
     circuitBase = new CircuitBase();
@@ -390,7 +487,7 @@ void GLWidget::paintGL()
     }
 
     if (cursor != 0) {
-        cursor -> draw();
+        cursor -> draw(parent_window->materialchoose->material_text.toStdString());
     }
 
     glPopMatrix();
@@ -585,13 +682,13 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     float depth = findDepth(posX, posY);
     switch(activeMode) {
     case ADD_MODE:{
-        cursor = new Cursor(posX, posY, depth);
+        cursor = new Cursor(posX, posY, depth,this);
         setReferenceWidgetData();
         update();
         break;
     }
     case DELETE_MODE:{
-        cursor = new Cursor(posX, posY, depth);
+        cursor = new Cursor(posX, posY, depth,this);
         cursor->setColor(1.0f, 1.0f, 1.0f);
         setReferenceWidgetData();
         update();
@@ -732,7 +829,7 @@ void GLWidget::LoadFile(QString Filename) {
 
             // Need to be modified!float depth = findDepth(posX, posY);
             float depth = findDepth(x, y);
-            BasicMaterial* material = new BasicMaterial(x, y, depth, currentLayer);
+            BasicMaterial* material = new BasicMaterial(this,x, y, depth,parent_window->materialchoose->material_text);
             materials.push_back(material);
             setReferenceWidgetData();
             update();
@@ -754,7 +851,7 @@ void GLWidget::fillMaterial(float ax, float ay, float bx, float by) {
             float posX = beginX + 0.5f * i;
             float posY = beginY + 0.5f * j;
             float depth = findDepth(posX, posY);
-            BasicMaterial* material = new BasicMaterial(posX, posY, depth, currentLayer);
+            BasicMaterial* material = new BasicMaterial(this,posX, posY, depth,parent_window->materialchoose->material_text);
             materials.push_back(material);
         }
     }
@@ -779,10 +876,6 @@ void GLWidget::eraseMaterial(float ax, float ay, float bx, float by) {
 
             float depthMax = -1;
             for (auto material : materials) {
-                if (material->layer != currentLayer) {
-                    continue;
-                }
-
                 if (material->x - material->getSizeX() / 2 <= x && x <= material->x + material->getSizeX() / 2 &&
                         material->y - material->getSizeY() / 2 <= y && y <= material->y + material->getSizeY() / 2) {
                     if (depthMax == -1 || depthMax < abs(material->depth)) {
@@ -808,19 +901,4 @@ void GLWidget::eraseMaterial(float ax, float ay, float bx, float by) {
 
     setReferenceWidgetData();
     update();
-}
-
-std::list<BasicMaterial*> GLWidget::getMaterials()
-{
-    return materials;
-}
-
-void GLWidget::setCurrentLayer(int layerNum)
-{
-    currentLayer = layerNum;
-}
-
-int GLWidget::getCurrentLayer()
-{
-    return currentLayer;
 }

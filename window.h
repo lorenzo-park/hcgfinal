@@ -60,6 +60,7 @@ QT_END_NAMESPACE
 
 class GLWidget;
 class MainWindow;
+class materialChoose;
 
 class Window : public QWidget
 {
@@ -70,6 +71,7 @@ public:
     void SaveFile(QString Filename);
     void LoadFile(QString Filename);
     void ResetMaterial();
+    materialChoose* materialchoose;
 protected:
     void keyPressEvent(QKeyEvent *event) override;
 
